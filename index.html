@@ -1034,7 +1034,7 @@ footer p {
 <!-- Main Content -->
 <main>
   <!--Movie Reviews-->
-      <section id="reviews" class="reviews" </section>
+      <section id="reviews" class="reviews"></section>
       <!-- Load More Button -->
       <button id="load-more">Load More</button>
 </main>
@@ -1062,7 +1062,7 @@ document.addEventListener('click', (event) => {
     }
 });
 //DOM references
-  const API_KEY = 00a29afc630db931314c32f156543971; // 🔑 replace with your TMDb key
+  const API_KEY = "00a29afc630db931314c32f156543971"; // 🔑 replace with your TMDb key
   const IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
   const reviewsSection = document.getElementById("reviews");
   const loadMoreBtn = document.getElementById("load-more");
@@ -1096,7 +1096,7 @@ function renderTags(tags) {
 }
 
 //Render posts dynamically
-function renderPosts() {
+function renderPosts(movies) {
  movies.forEach(movie => {
       const article = document.createElement("article");
       article.classList.add("review-card");
@@ -1178,5 +1178,6 @@ document.querySelectorAll(".transition-link").forEach(link => {
 </body>
 </html>
  
+
 
 

@@ -879,10 +879,14 @@ main {
 }
 
 /*Star rating system*/
-.checked {
-  color: orange;
-}
+ .fa-star {
+      font-size: 1.5rem;
+      color: #ccc; /* default gray */
+ }
 
+ .fa-star.checked {
+      color: orange;
+}
 /*Category tags*/
 .post-meta .tags a {
   color: #fd7d46;
@@ -1069,60 +1073,96 @@ document.addEventListener('click', (event) => {
 
   let currentPage = 1;
 
-  // Fetch movies from TMDb
+  const myMovieData = {
+  starwars: { myRating: 5, tags: ["Sci-Fi", "Adventure", "Classic"] },
+  inception: { myRating: 4, tags: ["Thriller", "Mind-Bending", "Nolan"] },
+  matrix: { myRating: 3, tags: ["Sci-Fi", "Cyberpunk", "Action"] }
+};;
+  
   async function fetchMovies(page = 1) {
-    const url = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=${page}`;
-    const response = await fetch(url);
-    const data = await response.json();
-    return data.results;
-  }
+  const url = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=${page}`;
+  const response = await fetch(url);
+  const data = await response.json();
+  return data.results; // array of movies
+}
 
+ function mergeMovieData(apiMovies) {
+  return apiMovies.map(movie => {
+    // Use TMDb id or title as key
+    const custom = myMovieData[movie.id] || myMovieData[movie.title.toLowerCase().replace(/\s+/g, '')];
+    return {
+      ...movie,
+      myRating: custom ? custom.myRating : null,
+      tags: custom ? custom.tags : []
+    };
+  });
+}
+  
 //Load 2 posts at a time
 let postsPerPage = 2;
 let currentIndex = 0;
 
-//Rendering stars
-function renderStars(rating) {
-    let stars = "";
-    for (let i = 0; i < 5; i++) {
-        stars += `<span class="fa fa-star ${i < rating ? "checked" : ""}"></span>`;
-    }
-    return stars;
+ function renderStars(rating) {
+  if (!rating) return "";
+  let stars = "";
+  for (let i = 1; i <= 5; i++) {
+    stars += `<span class="fa fa-star ${i <= rating ? "checked" : ""}"></span>`;
+  }
+  return stars;
 }
+    // Render posts with static stars
+    function renderPosts(movies) {
+      const reviewsSection = document.getElementById("reviews");
+      movies.forEach(movie => {
+        const article = document.createElement("article");
+        article.classList.add("review-card");
+        article.innerHTML = `
+          <figure>
+            <img src="${IMAGE_BASE + movie.poster_path}" alt="${movie.title} poster">
+          </figure>
+          <h2>${movie.title}</h2>
+          <p>${movie.overview}</p>
+           <div class="star-rating">
+            ${renderStars(movie.myRating)}
+          </div>
+        `;
+        reviewsSection.appendChild(article);
+      });
+    }
 
-//Rendering tags with hyperlinks
 function renderTags(tags) {
-    return tags.map(tag => `<a href="${tag.url}">${tag.label}</a>`).join(" ");
+  return tags.map(tag => `<span class="tag">${tag}</span>`).join(" ");
 }
 
 //Render posts dynamically
 function renderPosts(movies) {
  movies.forEach(movie => {
-      const article = document.createElement("article");
-      article.classList.add("review-card");
-      article.innerHTML = `
-        <figure>
-          <img src="${IMAGE_BASE + movie.poster_path}" alt="${movie.title} poster">
-          <figcaption>Movie Review</figcaption>
-        </figure>
-        <h2>${movie.title}</h2>
-        <div class="post-meta">
-          <span class="date">${movie.release_date}</span> |
-          <span class="star rating">${renderStars(movie.vote_average)}</span>
-        </div>
-        <p>${movie.overview}</p>
-        <a href="https://www.themoviedb.org/movie/${movie.id}" target="_blank" class="learn-more">Read Full Review</a>
-      `;
-      reviewsSection.appendChild(article);
-    });
+       const reviewsSection = document.getElementById("reviews");
+  movies.forEach(movie => {
+    const article = document.createElement("article");
+    article.classList.add("review-card");
+    article.innerHTML = `
+      <figure>
+        <img src="${IMAGE_BASE + movie.poster_path}" alt="${movie.title} poster">
+      </figure>
+      <h2>${movie.title}</h2>
+      <p>${movie.overview}</p>
+      <div class="star-rating">${renderStars(movie.myRating)}</div>
+      <div class="tags">${renderTags(movie.tags)}</div>
+    `;
+    reviewsSection.appendChild(article);
+  });
+}
+  
+renderPosts(movies);
+//First click loads posts
+async function loadMovies() {
+  const apiMovies = await fetchMovies(1);
+  const enrichedMovies = mergeMovieData(apiMovies);
+  renderPosts(enrichedMovies);
 }
 
-//First click loads posts
- async function loadMoreMovies() {
-    const movies = await fetchMovies(currentPage);
-    renderPosts(movies);
-    currentPage++;
-  }
+loadMovies();
 
  // Initial load
   loadMoreMovies();
@@ -1178,6 +1218,7 @@ document.querySelectorAll(".transition-link").forEach(link => {
 </body>
 </html>
  
+
 
 
 

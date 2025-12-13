@@ -1042,11 +1042,9 @@ footer p {
       <!-- Load More Button -->
       <button id="load-more">Load More</button>
 </main>
-<div id="wh"></div>
 <!-- Footer -->
 <footer>
   <p>&copy; 2025 Arya's Movie Musings</p>
-  <div id="wh"></div>
 </footer>
 <script>
 //Search bar animation 
@@ -1086,10 +1084,9 @@ document.addEventListener('click', (event) => {
   return data.results; // array of movies
 }
 
- function mergeMovieData(apiMovies) {
+function mergeMovieData(apiMovies) {
   return apiMovies.map(movie => {
-    // Use TMDb id or title as key
-    const custom = myMovieData[movie.id] || myMovieData[movie.title.toLowerCase().replace(/\s+/g, '')];
+   const custom = myMovieData[movie.id] || myMovieData[movie.title.toLowerCase().replace(/\s+/g, "")];
     return {
       ...movie,
       myRating: custom ? custom.myRating : null,
@@ -1097,12 +1094,8 @@ document.addEventListener('click', (event) => {
     };
   });
 }
-  
-//Load 2 posts at a time
-let postsPerPage = 2;
-let currentIndex = 0;
 
- function renderStars(rating) {
+function renderStars(rating) {
   if (!rating) return "";
   let stars = "";
   for (let i = 1; i <= 5; i++) {
@@ -1136,8 +1129,7 @@ function renderTags(tags) {
 
 //Render posts dynamically
 function renderPosts(movies) {
- movies.forEach(movie => {
-       const reviewsSection = document.getElementById("reviews");
+  const reviewsSection = document.getElementById("reviews");
   movies.forEach(movie => {
     const article = document.createElement("article");
     article.classList.add("review-card");
@@ -1154,22 +1146,12 @@ function renderPosts(movies) {
   });
 }
   
-renderPosts(movies);
 //First click loads posts
-async function loadMoreMovies() {
-    const movies = await fetchMovies(currentPage);
-    renderPosts(movies);
-    currentPage++;
-}
-
-  
 async function loadMovies() {
   const apiMovies = await fetchMovies(1);
   const enrichedMovies = mergeMovieData(apiMovies);
   renderPosts(enrichedMovies);
 }
-
-loadMovies();
 
  // Initial load
   loadMoreMovies();
@@ -1224,9 +1206,3 @@ document.querySelectorAll(".transition-link").forEach(link => {
 </script>
 </body>
 </html>
- 
-
-
-
-
-

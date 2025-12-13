@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title> Arya's Movie Musings</title>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style> 
 
 /*Borders and margins*/
@@ -27,39 +28,348 @@ body{
   min-height: 150vh;
 }
 
-:root {
-  /* Logo-one positioning */
-  --logo-top: 27%;
-  --logo-left: 49%;
+:root{
+   /*Ticket colors*/
+  --color-bg-dark: #111;
+  --color-bg-light: #fff;
+  --color-bg-gray: #ccc;
+  --color-banner: #ffa500;
+  --color-border: #111;
+  --color-text-dark: #111;
+  --color-text-light: #525252;
+  --color-text-muted: #a2aeae;
+  --color-highlight: #e84c3d;
+  --color-barcode: #343434;
+  --color-barcode-alt: #d63636;
+
+  /*Ticket sizes*/
+  --ticket-width: 27em;
+  --ticket-width-shrink: 20em;
+  --ticket-radius: 8px;
+  --ticket-border-dash: .18em;
+  --eye-width: 2em;
+  --eye-height: 1.5em;
+  --eye-border: 2px;
+  --barcode-height: 40px;
+
+  /* Ticket animation*/
+  --anim-duration: 1.5s;
+  --loader-transition: 0.8s ease;
+
+   /* Logo-one positioning */
+  --logo-top: 22%;
+  --logo-left: 50%;
   --logo-font: 'Playfair Display', serif;
   --logo-font-size: 1.5em;
   --logo-color: transparent;
   --logo-transform: translate(-50%, -50%);
 
-  /* Span colors */
+  /*Span colors*/
   --span-color-main: #FFFFFF;
   --span-color-bg: #7df9ff;
   --span-color-alt: #000;
 
-  /* Span transitions */
+  /*Span transitions*/
   --span-transition: 0.5s;
 
-  /* Span clip-paths */
+  /*Span clip-paths*/
   --span-clip-top: polygon(0 0, 100% 0, 100% 50%, 0 50%);
   --span-clip-bottom: polygon(0 50%, 100% 50%, 100% 100%, 0 100%);
 
-  /* Span hover transforms */
+  /*Span hover transforms*/
   --span-hover-up: translateY(-18px);
   --span-hover-down: translateY(18px);
   --span-hover-scale: translateY(-50%) scaleY(1);
 
-  /* Span base transform */
+  /*Span base transform*/
   --span-base-transform: translateY(-50%) scaleY(0);
 
-  /* Span font sizing */
+  /*Span font sizing*/
   --span-font-size: 0.25em;
   --span-font-weight: 500;
   --span-letter-spacing: 0.7em;
+}
+
+.loader.fade-out {
+  opacity: 0;
+  visibility: hidden;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/*Page transition loader image*/
+.loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--color-bg-dark); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* always on top */
+  opacity: 1;
+  visibility: visible;
+  transition: opacity var(--loader-transition), visibility var(--loader-transition);
+}
+
+/*Entire ticket*/
+.ticket-wrap {
+  display: flex;
+  flex-direction: row;
+  width: var(--ticket-width);
+  margin: 3em auto;
+  font-family: sans-serif;
+  background: var(--color-bg-light);
+  border-radius: var(--ticket-radius);
+  overflow: hidden;
+  position: relative;
+  animation: wrapShrink var(--anim-duration) ease-in-out infinite,
+             ticketBounce var(--anim-duration) ease-in-out infinite;
+}
+
+
+/*Ticket banner*/
+.ticket-wrap::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 20%;
+  background: var(--color-banner);
+  z-index: 0;
+}
+
+/*Left half of ticket*/
+.ticket-left {
+  flex: 2;
+  padding: 1em;
+  background: var(--color-bg-light);
+  color: var(--color-text-dark);
+  border-top-left-radius: var(--ticket-radius);
+  border-bottom-left-radius: var(--ticket-radius);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.ticket-left h1 {
+
+  padding: 0.5em;
+  display: inline-block; 
+  border-radius: 4px;    
+}
+
+/*Right half of ticket*/
+.ticket-right{
+  flex: 1;
+  background: var(--color-bg-gray);  
+  border-left: var(--ticket-border-dash) dashed var(--color-border);
+  border-top-right-radius: var(--ticket-radius);
+  border-bottom-right-radius: var(--ticket-radius);
+  display: flex;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  animation: chopRightHalf var(--anim-duration) ease-in-out infinite;
+}
+
+@keyframes chopRightHalf {
+  0% {
+    width: 100%;
+    opacity: 1;
+  } 
+   25% {
+    width: 0;
+    opacity: 0;
+  }
+  50% {
+    width: 0;
+    opacity: 0;
+  }
+  75% {
+    width: 100%;
+    opacity: 1;
+  }
+  100% {
+    width: 100%;
+    opacity: 1;
+  }
+}
+
+@keyframes wrapShrink {
+  0% { 
+    width: var(--ticket-width);
+  }
+  25% { 
+    width: var(--ticket-width-shrink); 
+  }   
+  50% { 
+    width: var(--ticket-width-shrink); 
+  }
+  75% { 
+    width: var(--ticket-width); 
+  }   
+  100% { 
+    width: var(--ticket-width);  
+  }
+}
+
+/*Makes ticket bounce after chopping right half*/
+@keyframes ticketBounce {
+  0%, 50% {
+    transform: scale(1);
+  }
+  75% {
+    transform: scale(1.05); /* overshoot */
+  }
+  85% {
+    transform: scale(0.95); /* bounce back smaller */
+  }
+  95% {
+    transform: scale(1.02); /* bounce up again */
+  }
+  100% {
+    transform: scale(1);    /* settle */
+  }
+}
+
+.ticket-left, .ticket-right {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+}
+
+.ticket-right:before,
+.ticket-right:after {
+  content: "";
+  position: absolute;
+  width: .9em;
+  height: .9em;
+  background: var(--color-border);
+  border-radius: 50%;
+  left: -.5em;
+}
+.ticket-right:before { top: -.4em }
+.ticket-right:after { bottom: -.4em }
+
+h1{
+  font-size: 1.1em;
+  margin-top: 0;
+}
+h1 span { font-weight: normal; }
+
+.title, .name, .seat, .time {
+  text-transform: uppercase;
+  font-weight: normal;
+}
+.title h2, .name h2, .seat h2, .time h2 {
+  font-size: .9em;
+  color: var(--color-text-light);
+  margin: 0;
+}
+.title span, .name span, .seat span, .time span {
+  font-size: .7em;
+  color: var(--color-text-muted);
+}
+
+.title { margin: 2em 0 0 0; }
+.name, .seat { margin: .7em 0 0 0; }
+.time { margin: .7em 0 0 1em; }
+.seat, .time { float: left; }
+
+.eye {
+  position: relative;
+  width: var(--eye-width);
+  height: var(--eye-height);
+  background: var(--color-bg-light);
+  border: var(--eye-border) solid var(--color-banner);
+  padding: 0.2em; 
+  margin: 0.5em auto;
+  border-radius: 50%;
+}
+
+.eye:before {
+  content:"";
+  position: absolute;
+  border-radius: 50%;
+  width: 1em;
+  height: 1em;
+  background: #fff;
+  z-index: 1;
+  background: var(--color-banner);
+  left: 8px;
+  top: 4px;
+}
+.eye:after {
+  content:"";
+  position: absolute;
+  border-radius: 50%;
+  width: .5em;
+  height: .5em;
+  background: var(--color-bg-light);
+  z-index: 3;
+  left: 12px;
+  top: 8px;
+}
+
+.number {
+  text-align: center;
+  text-transform: uppercase;
+}
+.number h3 {
+  color: var(--color-highlight);
+  margin: .9em 0 0 0;
+  font-size: 2.5em;
+}
+.number span {
+  display: block;
+  color: var(--color-text-muted);
+}
+
+/*Barcode*/
+.barcode {
+  width: 0px;
+  height: var(--barcode-height);
+  margin: 1em auto;
+  background: transparent;
+  box-shadow: 
+              2px 0 0 2px  var(--color-barcode),
+              5px 0 0 1px  var(--color-barcode),
+              9px 0 0 2px  var(--color-barcode),
+              12px 0 0 1px var(--color-barcode),
+              16px 0 0 3px var(--color-barcode),
+              20px 0 0 1px var(--color-barcode),
+              23px 0 0 2px var(--color-barcode),
+              27px 0 0 1px var(--color-barcode),
+              26px 0 0 2px var(--color-barcode-alt),
+              32px 0 0 1px var(--color-barcode),
+              36px 0 0 2px var(--color-barcode),
+              40px 0 0 1px var(--color-barcode),
+              44px 0 0 2px var(--color-barcode),
+              49px 0 0 1px var(--color-barcode),
+              53px 0 0 2px var(--color-barcode),
+              57px 0 0 1px var(--color-barcode),
+              62px 0 0 2px var(--color-barcode),
+              66px 0 0 3px var(--color-barcode),
+              70px 0 0 2px var(--color-barcode),
+              74px 0 0 1px var(--color-barcode),
+              78px 0 0 2px var(--color-barcode),
+              82px 0 0 1px var(--color-barcode),
+              87px 0 0 2px var(--color-barcode),
+              91px 0 0 1px var(--color-barcode);
 }
 
 /*Header*/
@@ -78,13 +388,14 @@ body{
  text-align: center;
 }
 
+
 /*Footer*/
 footer{
   display: flex;
   justify-content: space-between;
   background-color: #333333;
   text-align: center; 
-  height: 97px;    
+  height: 100px;    
   line-height: 75px;
   width: 100%;
   padding: 1rem;
@@ -98,25 +409,10 @@ footer{
   justify-content: space-between; 
   background-color: #333333;
   padding: 0 1rem;
+  height: 120px;
 }
 
-.logo
-{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2rem;
-  font-weight: bold;
-  color: #FFFFFF;
-  background: none;   
-  border: none;
-  box-shadow: none;
-  margin: 0;
-  padding: 0;
-}
-
-.logo-one
-{
+.logo-one {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -130,7 +426,7 @@ footer{
   color: var(--logo-color);
   text-transform: uppercase;
 }
-
+   
 h2 span:nth-child(1){
   position:absolute;
   top:0; left:0; 
@@ -180,7 +476,7 @@ h2:hover span:nth-child(3){
 
 /*logo styling */
 .logo img {
-  height: 70px;   
+  height: 90px;   
   width: 100%;
 }
 
@@ -208,7 +504,10 @@ ul.topnav li a {
   color: #FFFFFF;
   padding: 12px 20px;
   text-decoration: none;
+  width: 100%;
   font-family: sans-serif;
+  font-size: 1rem;
+  padding: 10px 20px;
 }
 
 /*Nav bar menu buttons alternating color 1*/
@@ -228,16 +527,10 @@ ul.topnav li.right {
   float: right;
 }
 
-/*body list*/
-main ul, body ul {
-  list-style-type: disc;      
-  margin-left: 1.5rem;       
-  padding-left: 1rem;   
-}
-
 /*Basic mobile breakpoint*/
 @media screen and (max-width: 600px) {
-  .navbar {
+
+.navbar {
     flex-direction: column;
     align-items: center;
     height: auto; 
@@ -260,6 +553,10 @@ main ul, body ul {
     border-top: 1px solid #4A4A4A;
   }
 
+  .banner {
+  height: 40vh; 
+  }
+
   .dropdown-content {
     position: static;
     flex-direction: column;
@@ -273,31 +570,46 @@ main ul, body ul {
     justify-content: center;
   }
 
-  .logo-one {
-    top: 18%; 
-    position: static;        
-    transform: none;         
-    text-align: center;      
-    margin: 1rem auto;       
-    font-size: 0.9em; 
-    padding: 0.5rem;       
-    color: #fff;             
+  .reviews{
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+
+  .review-card{
+    padding: 1rem;
+  }
+
+  .review-card img {
+    padding: 1rem;
+    height: auto;
+    max-height: 200px;
+  }
+
+  .review-card h2 {
+    font-size: 1.1rem;             
+  }
+
+  .review-card p {
+    font-size: 0.9rem;             
+    line-height: 1.4;
   }
 
   body {
+    opacity: 0;
     font-size: 0.85rem;
     width: 100%;
+    transition: opacity 0.8s ease;
   }
 
-  .form-box input[type="submit"]  {
+  /* Visible state */
+  body.loaded {
+    opacity: 1;
+  }
+
+  .learn-more {
     display: inline-block;
     padding: 0.4rem 0.8rem;
     font-size: 0.9rem;
-  }
-
-  .form-box {
-    padding: 10px;
-    max-width: 95%;   
   }
 
   footer {
@@ -311,34 +623,51 @@ main ul, body ul {
 /*Basic tablet breakpoint*/
 @media screen and (max-width: 1024px) {
 
-  .navbar {
+ .navbar {
     flex-direction: column;
     align-items: flex-start;
     padding: 1rem;
     height: auto;
   }
 
+  .reviews {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+
+  .banner {
+  height: 40vh; 
+}
+
+  .review-card h2 {
+    font-size: 1.4rem;
+  }
+
+  .review-card p {
+    font-size: 0.95rem;
+  }
+
+   .review-card img {
+    max-height: 250px;
+    height: auto;
+  }
+
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   .search-container {
     margin-top: 0.5rem;
     width: 100%;
-  }
-
-  .form-box {
-    padding: 15px;
-    max-width: 90%;   /* shrink on tablets */
-  }
-
-   .logo-one {
-    top: 22%;                               
-    transform: translate(-50%, -50%);
-    font-size: 1em;        
   }
 }
 
 /*Desktop breakpoint*/
 @media screen and (min-width: 1200px) {
-  
- .navbar {
+
+  .navbar {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
@@ -346,8 +675,30 @@ main ul, body ul {
     padding: 0 1rem;
   }
 
+  .reviews {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .review-card h2 {
+    font-size: 2rem;
+  }
+
+  .review-card p {
+    font-size: 1.1rem;
+  }
+
+  .review-card img {
+    max-height: 350px;   
+    height: auto;
+  }
+
   .logo-one {
     font-size: 1.5em;        
+ }
+
+ .banner {
+  height: 60vh; 
  }
 }
 
@@ -375,10 +726,10 @@ main ul, body ul {
 
 /*Show dropdown on hover*/
 .dropdown:hover .dropdown-content {
-  display: flex; /* keep flex when visible */
+  display: flex; /*Keep flex when visible */
 }
 
-/*Best and Worst submenu colors*/
+/* Best and Worst submenu colors*/
 .bestworst-menu > a {
   background-color: #333333;
   color: #ffa500; 
@@ -458,9 +809,170 @@ main {
   width: 100%;
 }
 
+/*Movie review section*/
+.reviews {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  padding: 1rem;
+  width: 100%;
+}
+
+/*Review card*/
+.review-card { 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: #333;
+  border: 1px solid #ffa500;
+  color: #FFFFFF;
+  margin-top: 2rem;
+  padding: 2rem;
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/*Review card figure*/
+.review-card figure {
+  margin-bottom: 1rem;
+}
+
+/*Images inside review cards*/
+.review-card img {
+  width: 100%;  
+  height: auto;            
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+/*Review card h2 text*/
+.review-card h2 {
+  margin: 1rem 0;
+  font-size: 1.8rem;
+  color: #7DF9FF;  
+}
+
+/*Review card p text*/
+.review-card p {
+  line-height: 1.6;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: #FFFFFF;
+}
+
+/*Read more button*/
+.review-card .learn-more {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: #7DF9FF;
+  color: #333333;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+/*Read more button hover*/
+.review-card .learn-more:hover {
+  background: #FFA500;
+  color: #FFFFFF;
+}
+
+/*Star rating system*/
+ .fa-star {
+      font-size: 1.5rem;
+      color: #ccc; /* default gray */
+ }
+
+ .fa-star.checked {
+      color: orange;
+}
+/*Category tags*/
+.post-meta .tags a {
+  color: #fd7d46;
+  text-decoration: none;
+}
+
+/*Category tags hover*/
+.post-meta .tags a:hover {
+  text-decoration: underline;
+}
+
+/*Load more button*/
+#load-more { 
+  display: block;
+  margin: 2rem auto;
+  padding: 0.75rem 1.5rem;
+  background: #7df9ff;
+  color: #333333;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/*Load more button when hovering*/
+#load-more:hover {
+  background: #ffa500;
+  color: #FFFFFF;
+} 
+
+footer {
+  display: flex;
+  justify-content: space-between; /* left and right alignment */
+  align-items: center;
+  background-color: #333333;
+  color: #FFFFFF;
+  padding: 1rem;
+  height: 100px;
+}
+
+footer p {
+  margin: 0;
+}
+
+#wh {
+  font-size: 0.9rem;
+  color: #7df9ff;   /* accent color */
+  text-align: right;
+}
+
 </style>
 </head>
 <body>
+<!--Page transition section-->
+<div class="loader">
+  <div class="ticket-wrap">
+    <div class="ticket-left">
+      <h1>STARTUP <span> Cinema</span></h1>
+      <div class="ticket-title">
+        <h2>STAR WARS</h2>
+        <span>Movie</span>
+      </div>
+      <div class="ticket-name">
+        <h2>A.A.</h2>
+        <span>Name</span>
+      </div>
+      <div class="ticket-seat">
+        <h2>156</h2>
+        <span>Seat</span>   
+      </div>
+      <div class="ticket-time">
+        <h2>9:45</h2>
+        <span>Time</span>
+      </div>
+
+  </div>
+  <div class="ticket-right">
+     <div class="eye"></div>
+     <div class="number">
+      <h3>156</h3> 
+      <span>seat</span>
+    </div>
+    <div class="barcode"></div>
+  </div>
+ </div>
+</div>
+ 
     <!--Header Section-->
     <header class="banner">
         <!--Banner-->
@@ -483,16 +995,17 @@ main {
 
           <!--Responsive Navigation Section-->
           <ul class ="topnav">
-             <li><a href="index.html">Home</a></li>
+             <li><a href="index.html" class="transition-link">Home</a></li>
 
+             <!-- Dropdown: Movie Reviews -->
               <li class="dropdown reviews-menu">
                 <a href="reviews.html">Movie Reviews</a>
               </li>
 
-             <li><a href="genre.html">Film Genres</a></li>
+             <li><a href="genre.html" class="transition-link">Film Genres</a></li>
              <li><a href="top20.html">Arya's Top 20</a></li>
 
-             <!--Dropdown: Best and Worst-->
+             <!-- Dropdown: Best and Worst -->
              <li class="dropdown bestworst-menu">
                 <a href="bestworst.html">Best and Worst</a>
                   <div class="dropdown-content">
@@ -501,19 +1014,19 @@ main {
                  </div>
              </li>
 
-               <!--Dropdown: Lists and Guides-->
+               <!-- Dropdown: Lists and Guides -->
               <li class="dropdown lists-menu">
                 <a href="listsandguides.html">Lists and Guides</a>
                   <div class="dropdown-content">
                     <a href="filmseries.html">Film Series</a>
                     <a href="genrespotlight.html">Genre Spotlights</a>
-                    <a href="streamingrecs.html">Streaming Recs</a>
+                    <a href="genrespotlight.html">Streaming Recs</a>
                  </div>
              </li>
 
              <li><a href="news.html">Movie News</a></li>
-             <li><a href="about.html">About</a></li>
-             <li><a href="contact.html">Contact</a></li>
+             <li><a href="about.html" class="transition-link">About</a></li>
+             <li><a href="contact.html" class="transition-link">Contact</a></li>
 
           <div class="search-container">
             <input type="text" class="search-input"placeholder="Search...">
@@ -522,18 +1035,45 @@ main {
         </ul>
     </nav>
 
- <!-- Main content -->
+<!-- Main Content -->
 <main>
- <h1>Explore Film Genres</h1>
- </main> 
+<section id="admin-panel">
+  <h3>Manage Allowed Movies</h3>
+  <form id="add-movie-form">
+    <label>Movie ID (TMDb): <input type="text" id="movie-id"></label><br>
+    <label>Title: <input type="text" id="movie-title"></label><br>
+    <label>My Rating (1–5): <input type="number" id="movie-rating" min="1" max="5"></label><br>
+    <label>Tags (comma separated): <input type="text" id="movie-tags"></label><br>
+    <button type="submit">Add Movie</button>
+  </form>
 
-  <!-- Footer -->
+  <h4>Current Allowed Movies</h4>
+  <table id="allowed-table" border="1" cellpadding="6">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Rating</th>
+        <th>Tags</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</section>
+  <!--Movie Reviews-->
+      <section id="reviews" class="reviews"></section>
+      <!-- Load More Button -->
+      <button id="load-more">Load More</button>
+</main>
+<div id="wh"></div>
+<!-- Footer -->
 <footer>
   <p>&copy; 2025 Arya's Movie Musings</p>
+  <div id="wh"></div>
 </footer>
-
 <script>
-// Search bar animation
+//Search bar animation 
 const searchIcon = document.querySelector('.search-icon');
 const searchInput = document.querySelector('.search-input');
 
@@ -548,6 +1088,254 @@ document.addEventListener('click', (event) => {
     if (!searchIcon.contains(event.target) && !searchInput.contains(event.target)) {
         searchInput.classList.remove('expanded');
     }
+});
+//DOM references
+  const API_KEY = "00a29afc630db931314c32f156543971"; // 🔑 replace with your TMDb key
+  const IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
+  const reviewsSection = document.getElementById("reviews");
+  const loadMoreBtn = document.getElementById("load-more");
+
+  let currentPage = 1;
+
+const allowedTitles = {
+  "Star Wars": { myRating: 5, tags: ["Sci-Fi", "Adventure", "Classic"] },
+  "Inception": { myRating: 4, tags: ["Thriller", "Mind-Bending", "Nolan"] },
+  "The Matrix": { myRating: 3, tags: ["Sci-Fi", "Cyberpunk", "Action"] }
+};
+  
+  async function fetchMovies(page = 1) {
+  const url = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=${page}`;
+  const response = await fetch(url);
+  const data = await response.json();
+  return data.results; // array of movies
+}
+
+ function mergeMovieData(apiMovies) {
+  return apiMovies.map(movie => {
+    // Use TMDb id or title as key
+    const custom = myMovieData[movie.id] || myMovieData[movie.title.toLowerCase().replace(/\s+/g, '')];
+    return {
+      ...movie,
+      myRating: custom ? custom.myRating : null,
+      tags: custom ? custom.tags : []
+    };
+  });
+}
+
+function filterAndMerge(apiMovies) {
+  return apiMovies
+    .filter(movie => allowedMovies[movie.id]) // only keep movies you added
+    .map(movie => ({
+      ...movie,
+      myRating: allowedMovies[movie.id].myRating,
+      tags: allowedMovies[movie.id].tags
+    }));
+}
+  
+//Load 2 posts at a time
+let postsPerPage = 2;
+let currentIndex = 0;
+
+ function renderStars(rating) {
+  if (!rating) return "";
+  let stars = "";
+  for (let i = 1; i <= 5; i++) {
+    stars += `<span class="fa fa-star ${i <= rating ? "checked" : ""}"></span>`;
+  }
+  return stars;
+}
+    // Render posts with static stars
+    function renderPosts(movies) {
+      const reviewsSection = document.getElementById("reviews");
+      movies.forEach(movie => {
+        const article = document.createElement("article");
+        article.classList.add("review-card");
+        article.innerHTML = `
+          <figure>
+            <img src="${IMAGE_BASE + movie.poster_path}" alt="${movie.title} poster">
+          </figure>
+          <h2>${movie.title}</h2>
+          <p>${movie.overview}</p>
+           <div class="star-rating">
+            ${renderStars(movie.myRating)}
+          </div>
+        `;
+        reviewsSection.appendChild(article);
+      });
+    }
+
+function renderTags(tags) {
+  return tags.map(tag => `<span class="tag">${tag}</span>`).join(" ");
+}
+
+//Render posts dynamically
+function renderPosts(movies) {
+ movies.forEach(movie => {
+       const reviewsSection = document.getElementById("reviews");
+  movies.forEach(movie => {
+    const article = document.createElement("article");
+    article.classList.add("review-card");
+    article.innerHTML = `
+      <figure>
+        <img src="${IMAGE_BASE + movie.poster_path}" alt="${movie.title} poster">
+      </figure>
+      <h2>${movie.title}</h2>
+      <p>${movie.overview}</p>
+      <div class="star-rating">${renderStars(movie.myRating)}</div>
+      <div class="tags">${renderTags(movie.tags)}</div>
+    `;
+    reviewsSection.appendChild(article);
+  });
+}
+  
+renderPosts(movies);
+//First click loads posts
+async function loadMoreMovies() {
+    const movies = await fetchMovies(currentPage);
+    renderPosts(movies);
+    currentPage++;
+}
+
+async function loadMovies() {
+  const apiMovies = await fetchMovies(1);
+  const selectedMovies = filterAndMerge(apiMovies);
+  renderPosts(selectedMovies);
+}
+
+// Load from localStorage or start empty
+let allowedMovies = JSON.parse(localStorage.getItem("allowedMovies")) || {};
+
+function saveAllowedMovies() {
+  localStorage.setItem("allowedMovies", JSON.stringify(allowedMovies));
+}
+
+// Render admin table
+function renderAllowedTable() {
+  const tbody = document.querySelector("#allowed-table tbody");
+  tbody.innerHTML = "";
+
+  Object.entries(allowedMovies).forEach(([id, data]) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${id}</td>
+      <td>${data.title || ""}</td>
+      <td>${data.myRating || ""}</td>
+      <td>${data.tags ? data.tags.join(", ") : ""}</td>
+      <td><button class="remove-btn" data-id="${id}">Remove</button></td>
+    `;
+    tbody.appendChild(row);
+  });
+
+  // Attach remove listeners
+  document.querySelectorAll(".remove-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = btn.getAttribute("data-id");
+      delete allowedMovies[id];
+      saveAllowedMovies();
+      renderAllowedTable();
+      loadMovies(); // refresh visible reviews instantly
+    });
+  });
+}
+
+// Handle adding new movies
+document.getElementById("add-movie-form").addEventListener("submit", e => {
+  e.preventDefault();
+
+  const id = document.getElementById("movie-id").value.trim();
+  const title = document.getElementById("movie-title").value.trim();
+  const rating = parseInt(document.getElementById("movie-rating").value);
+  const tags = document.getElementById("movie-tags").value.split(",").map(t => t.trim());
+
+  if (!id) {
+    alert("Movie ID is required!");
+    return;
+  }
+
+  allowedMovies[id] = { title, myRating: rating, tags };
+  saveAllowedMovies();
+  renderAllowedTable();
+  loadMovies(); // refresh visible reviews instantly
+
+  e.target.reset();
+});
+
+// Handle adding new movies
+document.getElementById("add-movie-form").addEventListener("submit", e => {
+  e.preventDefault();
+
+  const id = document.getElementById("movie-id").value.trim();
+  const title = document.getElementById("movie-title").value.trim();
+  const rating = parseInt(document.getElementById("movie-rating").value);
+  const tags = document.getElementById("movie-tags").value.split(",").map(t => t.trim());
+
+  if (!id) {
+    alert("Movie ID is required!");
+    return;
+  }
+
+  allowedMovies[id] = { title, myRating: rating, tags };
+  saveAllowedMovies();
+  renderAllowedTable();
+
+  // Clear form
+  e.target.reset();
+});
+
+// Initial render
+renderAllowedTable();
+  
+loadMovies();
+
+ // Initial load
+  loadMoreMovies();
+  loadMoreBtn.addEventListener("click", loadMoreMovies);
+  //l
+  const loader = document.querySelector(".loader");
+  const body = document.body;
+
+//Hide loader once the page is fully loaded
+window.addEventListener("load", () => {
+
+ setTimeout(() =>{
+   body.classList.add("loaded");
+   loader.classList.add("fade-out"); // fade out loader
+
+   loader.addEventListener("transitionend", (e) => {
+    if (e.propertyName === "opacity") {
+      loader.style.display = "none";
+   }
+  }, { once: true });
+ }, 2000);
+});
+
+//Page transition function
+function triggerPageTransition(targetUrl) {
+  body.classList.remove("loaded");
+  loader.style.display = "flex";       // show loader
+  loader.classList.remove("fade-out"); // reset state
+  
+  //Start fade-out after short delay
+  setTimeout(() => {
+    loader.classList.add("fade-out");
+
+   //Navigate once fade-out animation is done
+    loader.addEventListener("transitionend", (e) => {
+     if (e.propertyName === "opacity") {
+      loader.style.display = "none";
+      window.location.href = targetUrl;
+    }
+  }, { once: true });  
+ }, 2000);
+}
+
+//Attach transition behavior to all links with .transition-link
+document.querySelectorAll(".transition-link").forEach(link => {
+  link.addEventListener("click", (e) => {
+    e.preventDefault(); // stop instant navigation
+    const targetUrl = link.getAttribute("href");
+    triggerPageTransition(targetUrl);
+  });
 });
 </script>
 </body>

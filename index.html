@@ -105,6 +105,7 @@ body{
 /*Page transition loader image*/
 .loader {
   position: fixed;
+  inset: 0;
   top: 0;
   left: 0;
   width: 100%;
@@ -115,8 +116,20 @@ body{
   align-items: center;
   z-index: 9999; /* always on top */
   opacity: 1;
-  visibility: visible;
+  /*visibility: visible;*/
+  pointer-events: all;
   transition: opacity var(--loader-transition), visibility var(--loader-transition);
+}
+
+/* Hidden state */
+.loader.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Final kill-switch */
+.loader.is-dead {
+  display: none;
 }
 
 /*Entire ticket*/
@@ -133,7 +146,6 @@ body{
   animation: wrapShrink var(--anim-duration) ease-in-out infinite,
              ticketBounce var(--anim-duration) ease-in-out infinite;
 }
-
 
 /*Ticket banner*/
 .ticket-wrap::before {
@@ -893,10 +905,10 @@ main {
 }
 
 /*Category tags hover*/
-.tag: hover {
+.tag:hover {
   display: inline-block;
   background: #ffa500;
-  color: #333
+  color: #333;
   padding: 0.25rem 0.6rem;
   margin: 0.2rem;
   border-radius: 12px;
@@ -947,7 +959,7 @@ footer p {
 </head>
 <body>
 <!--Page transition section-->
-<div class="loader">
+<div class="loader aria-hidden="true">
   <div class="ticket-wrap">
     <div class="ticket-left">
       <h1>STARTUP <span> Cinema</span></h1>
@@ -1053,13 +1065,7 @@ footer p {
 <footer>
   <p>&copy; 2025 Arya's Movie Musings</p>
 </footer>
-<script>
-
-window.addEventListener("load", () => {
-  document.body.classList.add("loaded");
-  document.querySelector(".loader")?.classList.add("fade-out");
-});
-  
+<script>  
 //Search bar animation 
 const searchIcon = document.querySelector('.search-icon');
 const searchInput = document.querySelector('.search-input');
@@ -1100,13 +1106,13 @@ document.addEventListener('click', (event) => {
 function mergeMovieData(apiMovies) {
   return apiMovies.map(movie => {
   const key = movie.title
-    .toLowerCase();
-    .replace(/^the\s+/, "");
+    .toLowerCase()
+    .replace(/^the\s+/, "")
     .replace(/[^a-z0-0]/g, "");
   const custom = myMovieData[key];
     return {
       ...movie,
-      myRating: custom?.myRating ?? null;
+      myRating: custom?.myRating ?? null,
       tags: custom.tags ?? []
     };
   });
@@ -1208,10 +1214,53 @@ document.querySelectorAll(".transition-link").forEach(link => {
     const targetUrl = link.getAttribute("href");
     triggerPageTransition(targetUrl);
   });
+
+(function () {
+  const loader = document.querySelector(".loader");
+  if (!loader) return;
+
+  let killed = false;
+
+  function hideLoader(reason = "unknown") {
+    if (killed) return;
+    killed = true;
+
+    console.info("Loader dismissed:", reason);
+
+    document.body.classList.add("loaded");
+    loader.classList.add("is-hidden");
+
+    // Hard removal after transition
+    setTimeout(() => {
+      loader.classList.add("is-dead");
+    }, 700);
+  }
+
+  /* DOM is ready — never wait for images */
+  document.addEventListener("DOMContentLoaded", () => {
+    hideLoader("DOM ready");
+  });
+
+  /*Absolute failsafe — even if DOMContentLoaded fails */
+  setTimeout(() => {
+    hideLoader("failsafe timeout");
+  }, 4000);
+
+  /*If ANY JS error happens, kill loader */
+  window.addEventListener("error", () => {
+    hideLoader("js error");
+  });
+
+  /*If a promise is rejected */
+  window.addEventListener("unhandledrejection", () => {
+    hideLoader("promise rejection");
+  });
+})();  
 });
 </script>
 </body>
 </html>
+
 
 
 

@@ -888,13 +888,20 @@ main {
       color: orange;
 }
 /*Category tags*/
-.post-meta .tags a {
-  color: #fd7d46;
-  text-decoration: none;
+.tags {
+  margin-top: 0.5rem;
 }
 
 /*Category tags hover*/
-.post-meta .tags a:hover {
+.tag: hover {
+  display: inline-block;
+  background: #ffa500;
+  color: #333
+  padding: 0.25rem 0.6rem;
+  margin: 0.2rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
   text-decoration: underline;
 }
 
@@ -1086,11 +1093,15 @@ document.addEventListener('click', (event) => {
 
 function mergeMovieData(apiMovies) {
   return apiMovies.map(movie => {
-   const custom = myMovieData[movie.id] || myMovieData[movie.title.toLowerCase().replace(/\s+/g, "")];
+  const key = movie.title
+    .toLowerCase();
+    .replace(/^the\s+/, "");
+    .replace(/[^a-z0-0]/g, "");
+  const custom = myMovieData[key];
     return {
       ...movie,
-      myRating: custom ? custom.myRating : null,
-      tags: custom ? custom.tags : []
+      myRating: custom?.myRating ?? null;
+      tags: custom.tags ?? []
     };
   });
 }
@@ -1195,5 +1206,6 @@ document.querySelectorAll(".transition-link").forEach(link => {
 </script>
 </body>
 </html>
+
 
 

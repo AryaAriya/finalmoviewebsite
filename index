@@ -1074,6 +1074,8 @@ document.addEventListener('click', (event) => {
   inception: { myRating: 4, tags: ["Thriller", "Mind-Bending", "Nolan"] },
   matrix: { myRating: 3, tags: ["Sci-Fi", "Cyberpunk", "Action"] }
 };;
+
+  let currentPage = 1;
   
   async function fetchMovies(page = 1) {
   const url = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=${page}`;
@@ -1107,8 +1109,7 @@ function renderTags(tags) {
 }
 
 //Render posts dynamically
-function renderPosts(movies) {
-  const reviewsSection = document.getElementById("reviews");
+function renderPosts(movies) 
   movies.forEach(movie => {
     const article = document.createElement("article");
     article.classList.add("review-card");
@@ -1133,8 +1134,10 @@ async function loadMoreMovies() {
   currentPage++;
 }
 
+ let currentPage = 1;
+  
  // Initial load
-  loadMoreovies();
+  loadMoreMovies();
   loadMoreBtn.addEventListener("click", loadMoreMovies);
   //l
   const loader = document.querySelector(".loader");
@@ -1186,4 +1189,5 @@ document.querySelectorAll(".transition-link").forEach(link => {
 </script>
 </body>
 </html>
+
 

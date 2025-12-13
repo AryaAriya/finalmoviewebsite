@@ -1069,8 +1069,6 @@ document.addEventListener('click', (event) => {
   const reviewsSection = document.getElementById("reviews");
   const loadMoreBtn = document.getElementById("load-more");
 
-  let currentPage = 1;
-
   const myMovieData = {
   starwars: { myRating: 5, tags: ["Sci-Fi", "Adventure", "Classic"] },
   inception: { myRating: 4, tags: ["Thriller", "Mind-Bending", "Nolan"] },
@@ -1103,25 +1101,6 @@ function renderStars(rating) {
   }
   return stars;
 }
-    // Render posts with static stars
-    function renderPosts(movies) {
-      const reviewsSection = document.getElementById("reviews");
-      movies.forEach(movie => {
-        const article = document.createElement("article");
-        article.classList.add("review-card");
-        article.innerHTML = `
-          <figure>
-            <img src="${IMAGE_BASE + movie.poster_path}" alt="${movie.title} poster">
-          </figure>
-          <h2>${movie.title}</h2>
-          <p>${movie.overview}</p>
-           <div class="star-rating">
-            ${renderStars(movie.myRating)}
-          </div>
-        `;
-        reviewsSection.appendChild(article);
-      });
-    }
 
 function renderTags(tags) {
   return tags.map(tag => `<span class="tag">${tag}</span>`).join(" ");
@@ -1147,14 +1126,15 @@ function renderPosts(movies) {
 }
   
 //First click loads posts
-async function loadMovies() {
-  const apiMovies = await fetchMovies(1);
+async function loadMoreMovies() {
+  const apiMovies = await fetchMovies(currentPage);
   const enrichedMovies = mergeMovieData(apiMovies);
   renderPosts(enrichedMovies);
+  currentPage++;
 }
 
  // Initial load
-  loadMoreMovies();
+  loadMoreovies();
   loadMoreBtn.addEventListener("click", loadMoreMovies);
   //l
   const loader = document.querySelector(".loader");
@@ -1206,3 +1186,4 @@ document.querySelectorAll(".transition-link").forEach(link => {
 </script>
 </body>
 </html>
+

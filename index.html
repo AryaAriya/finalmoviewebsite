@@ -103,33 +103,31 @@ body{
 }
 
 /*Page transition loader image*/
+
+body {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+body.loaded {
+  opacity: 1;
+}
+  
 .loader {
   position: fixed;
   inset: 0;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: var(--color-bg-dark); 
+  background: #111;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999; /* always on top */
-  opacity: 1;
-  /*visibility: visible;*/
-  pointer-events: all;
-  transition: opacity var(--loader-transition), visibility var(--loader-transition);
+  z-index: 9999;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
 }
 
-/* Hidden state */
-.loader.is-hidden {
+.loader.hidden {
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
-}
-
-/* Final kill-switch */
-.loader.is-dead {
-  display: none;
 }
 
 /*Entire ticket*/
@@ -959,7 +957,7 @@ footer p {
 </head>
 <body>
 <!--Page transition section-->
-<div class="loader aria-hidden="true">
+<div class="loader" aria-hidden="true">
   <div class="ticket-wrap">
     <div class="ticket-left">
       <h1>STARTUP <span> Cinema</span></h1>
@@ -1108,12 +1106,12 @@ function mergeMovieData(apiMovies) {
   const key = movie.title
     .toLowerCase()
     .replace(/^the\s+/, "")
-    .replace(/[^a-z0-0]/g, "");
+    .replace(/[^a-z0-9]/g, "");
   const custom = myMovieData[key];
     return {
       ...movie,
       myRating: custom?.myRating ?? null,
-      tags: custom.tags ?? []
+      tags: custom?.tags ?? []
     };
   });
 }
@@ -1175,93 +1173,51 @@ async function loadMoreMovies() {
 //Hide loader once the page is fully loaded
 window.addEventListener("load", () => {
 
- setTimeout(() =>{
-   body.classList.add("loaded");
-   loader.classList.add("fade-out"); // fade out loader
-
-   loader.addEventListener("transitionend", (e) => {
-    if (e.propertyName === "opacity") {
-      loader.style.display = "none";
-   }
-  }, { once: true });
- }, 2000);
-});
-
-//Page transition function
-function triggerPageTransition(targetUrl) {
-  body.classList.remove("loaded");
-  loader.style.display = "flex";       // show loader
-  loader.classList.remove("fade-out"); // reset state
-  
-  //Start fade-out after short delay
-  setTimeout(() => {
-    loader.classList.add("fade-out");
-
-   //Navigate once fade-out animation is done
-    loader.addEventListener("transitionend", (e) => {
-     if (e.propertyName === "opacity") {
-      loader.style.display = "none";
-      window.location.href = targetUrl;
-    }
-  }, { once: true });  
- }, 2000);
-}
-
-//Attach transition behavior to all links with .transition-link
-document.querySelectorAll(".transition-link").forEach(link => {
-  link.addEventListener("click", (e) => {
-    e.preventDefault(); // stop instant navigation
-    const targetUrl = link.getAttribute("href");
-    triggerPageTransition(targetUrl);
-  });
-
-(function () {
+(() => {
   const loader = document.querySelector(".loader");
+  const body = document.body;
+
   if (!loader) return;
 
-  let killed = false;
+  let dismissed = false;
 
   function hideLoader(reason = "unknown") {
-    if (killed) return;
-    killed = true;
+    if (dismissed) return;
+    dismissed = true;
 
-    console.info("Loader dismissed:", reason);
+    console.info("Loader hidden:", reason);
 
-    document.body.classList.add("loaded");
-    loader.classList.add("is-hidden");
-
-    // Hard removal after transition
-    setTimeout(() => {
-      loader.classList.add("is-dead");
-    }, 700);
+    body.classList.add("loaded");
+    loader.classList.add("hidden");
   }
 
-  /* DOM is ready — never wait for images */
+  /* Hide loader when DOM is ready (fastest safe point) */
   document.addEventListener("DOMContentLoaded", () => {
     hideLoader("DOM ready");
   });
 
-  /*Absolute failsafe — even if DOMContentLoaded fails */
+  /* Failsafe — never block longer than 3s */
   setTimeout(() => {
     hideLoader("failsafe timeout");
-  }, 4000);
+  }, 3000);
 
-  /*If ANY JS error happens, kill loader */
-  window.addEventListener("error", () => {
-    hideLoader("js error");
-  });
+  /* Page transitions */
+  window.triggerPageTransition = function (url) {
+    body.classList.remove("loaded");
+    loader.classList.remove("hidden");
 
-  /*If a promise is rejected */
-  window.addEventListener("unhandledrejection", () => {
-    hideLoader("promise rejection");
+    setTimeout(() => {
+      window.location.href = url;
+    }, 600); // match CSS transition
+  };
+
+})();
+
+document.querySelectorAll(".transition-link").forEach(link => {
+  link.addEventListener("click", e => {
+    e.preventDefault();
+    triggerPageTransition(link.href);
   });
-})();  
-});
 </script>
 </body>
 </html>
-
-
-
-
-

@@ -1047,12 +1047,6 @@ footer p {
   <p>&copy; 2025 Arya's Movie Musings</p>
 </footer>
 <script>
-
-window.addEventListener("load", () => {
-  document.body.classList.add("loaded");
-  document.querySelector(".loader")?.classList.add("fade-out");
-});
-  
 //Search bar animation 
 const searchIcon = document.querySelector('.search-icon');
 const searchInput = document.querySelector('.search-input');
@@ -1080,10 +1074,6 @@ document.addEventListener('click', (event) => {
   inception: { myRating: 4, tags: ["Thriller", "Mind-Bending", "Nolan"] },
   matrix: { myRating: 3, tags: ["Sci-Fi", "Cyberpunk", "Action"] }
 };;
-
-const poster = movie.poster_path
-  ? IMAGE_BASE + movie.poster_path
-  : "Images/placeholder.jpg";
 
   let currentPage = 1;
   
@@ -1121,6 +1111,9 @@ function renderTags(tags) {
 //Render posts dynamically
 function renderPosts(movies) {
   movies.forEach(movie => {
+    const poster = movie.poster_path
+   ? IMAGE_BASE + movie.poster_path
+   : "Images/placeholder.jpg";
     const article = document.createElement("article");
     article.classList.add("review-card");
     article.innerHTML = `
@@ -1202,4 +1195,5 @@ document.querySelectorAll(".transition-link").forEach(link => {
 </script>
 </body>
 </html>
+
 

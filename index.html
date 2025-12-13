@@ -1047,6 +1047,12 @@ footer p {
   <p>&copy; 2025 Arya's Movie Musings</p>
 </footer>
 <script>
+
+window.addEventListener("load", () => {
+  document.body.classList.add("loaded");
+  document.querySelector(".loader")?.classList.add("fade-out");
+});
+  
 //Search bar animation 
 const searchIcon = document.querySelector('.search-icon');
 const searchInput = document.querySelector('.search-input');
@@ -1074,6 +1080,10 @@ document.addEventListener('click', (event) => {
   inception: { myRating: 4, tags: ["Thriller", "Mind-Bending", "Nolan"] },
   matrix: { myRating: 3, tags: ["Sci-Fi", "Cyberpunk", "Action"] }
 };;
+
+const poster = movie.poster_path
+  ? IMAGE_BASE + movie.poster_path
+  : "Images/placeholder.jpg";
 
   let currentPage = 1;
   
@@ -1109,13 +1119,13 @@ function renderTags(tags) {
 }
 
 //Render posts dynamically
-function renderPosts(movies) 
+function renderPosts(movies) {
   movies.forEach(movie => {
     const article = document.createElement("article");
     article.classList.add("review-card");
     article.innerHTML = `
       <figure>
-        <img src="${IMAGE_BASE + movie.poster_path}" alt="${movie.title} poster">
+        <img src="${poster}" alt="${movie.title} poster">
       </figure>
       <h2>${movie.title}</h2>
       <p>${movie.overview}</p>
@@ -1138,7 +1148,6 @@ async function loadMoreMovies() {
     console.error("Movie loading failed:", error);
   }
 }
- let currentPage = 1;
   
  // Initial load
   loadMoreMovies();
@@ -1193,3 +1202,4 @@ document.querySelectorAll(".transition-link").forEach(link => {
 </script>
 </body>
 </html>
+

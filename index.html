@@ -1128,12 +1128,16 @@ function renderPosts(movies)
   
 //First click loads posts
 async function loadMoreMovies() {
+   try {
   const apiMovies = await fetchMovies(currentPage);
   const enrichedMovies = mergeMovieData(apiMovies);
   renderPosts(enrichedMovies);
   currentPage++;
+  }
+  catch (error) {
+    console.error("Movie loading failed:", error);
+  }
 }
-
  let currentPage = 1;
   
  // Initial load
@@ -1189,5 +1193,3 @@ document.querySelectorAll(".transition-link").forEach(link => {
 </script>
 </body>
 </html>
-
-

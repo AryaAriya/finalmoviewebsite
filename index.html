@@ -1166,29 +1166,22 @@ async function loadMoreMovies() {
  // Initial load
   loadMoreMovies();
   loadMoreBtn.addEventListener("click", loadMoreMovies);
-  //l
-  const loader = document.querySelector(".loader");
-  const body = document.body;
 
 //Hide loader once the page is fully loaded
 window.addEventListener("load", () => {
-
 (() => {
+
   const loader = document.querySelector(".loader");
   const body = document.body;
-
-  if (!loader) return;
 
   let dismissed = false;
 
   function hideLoader(reason = "unknown") {
     if (dismissed) return;
     dismissed = true;
-
     console.info("Loader hidden:", reason);
-
-    body.classList.add("loaded");
     loader.classList.add("hidden");
+    body.classList.add("loaded");
   }
 
   /* Hide loader when DOM is ready (fastest safe point) */
@@ -1202,7 +1195,7 @@ window.addEventListener("load", () => {
   }, 3000);
 
   /* Page transitions */
-  window.triggerPageTransition = function (url) {
+  window.triggerPageTransition = function(url) {
     body.classList.remove("loaded");
     loader.classList.remove("hidden");
 
@@ -1210,14 +1203,15 @@ window.addEventListener("load", () => {
       window.location.href = url;
     }, 600); // match CSS transition
   };
-
-})();
-
+  
 document.querySelectorAll(".transition-link").forEach(link => {
   link.addEventListener("click", e => {
     e.preventDefault();
     triggerPageTransition(link.href);
   });
+ });
+})();
 </script>
 </body>
 </html>
+

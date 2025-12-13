@@ -816,6 +816,33 @@ main {
   width: 100%;
 }
 
+.admin-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #ffa500;
+  color: #333;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.admin-btn.active {
+  background: #7df9ff;
+}
+
+.admin-controls {
+  margin-top: 0.5rem;
+}
+
+.admin-controls button {
+  margin: 0.2rem;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.75rem;
+}
+
 /*Movie review section*/
 .reviews {
   display: grid;
@@ -884,7 +911,6 @@ main {
   background: #FFA500;
   color: #FFFFFF;
 }
-
 
 /*Star rating*/
 .star-rating {
@@ -956,3 +982,4 @@ footer {
 footer p {
   margin: 0;
 }
+

@@ -1156,6 +1156,13 @@ function renderPosts(movies) {
   
 renderPosts(movies);
 //First click loads posts
+async function loadMoreMovies() {
+    const movies = await fetchMovies(currentPage);
+    renderPosts(movies);
+    currentPage++;
+}
+
+  
 async function loadMovies() {
   const apiMovies = await fetchMovies(1);
   const enrichedMovies = mergeMovieData(apiMovies);
@@ -1218,6 +1225,7 @@ document.querySelectorAll(".transition-link").forEach(link => {
 </body>
 </html>
  
+
 
 
 

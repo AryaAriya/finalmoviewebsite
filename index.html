@@ -1054,6 +1054,12 @@ footer p {
   <p>&copy; 2025 Arya's Movie Musings</p>
 </footer>
 <script>
+
+window.addEventListener("load", () => {
+  document.body.classList.add("loaded");
+  document.querySelector(".loader")?.classList.add("fade-out");
+});
+  
 //Search bar animation 
 const searchIcon = document.querySelector('.search-icon');
 const searchInput = document.querySelector('.search-input');
@@ -1206,6 +1212,7 @@ document.querySelectorAll(".transition-link").forEach(link => {
 </script>
 </body>
 </html>
+
 
 
 

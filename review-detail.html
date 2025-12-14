@@ -20,80 +20,78 @@
 
   <script>
     const API_KEY = "00a29afc630db931314c32f156543971";
-    const IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
-    const reviewDetail = document.getElementById("review-detail");
+const IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
+const reviewDetail = document.getElementById("review-detail");
 
-    // Get the movie ID from the URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const movieId = urlParams.get("id");
+// Get movie ID
+const urlParams = new URLSearchParams(window.location.search);
+const movieId = urlParams.get("id");
 
-    const movie = await fetchMovieById(movieId);
-    const credits = await fetchMovieCredits(movieId);
-
-    // Your local reviews array (or fetch from localStorage if you save them there)
-    let myReviews = JSON.parse(localStorage.getItem("myReviews")) || [
-      if (!myReviews) {
-        myReviews = [
-         { 
-          id: 1895,
-          myRating: 3, 
-          tags: ["Science-Fiction", "Action", "Adventure", "Drama", "Star Wars", "Star Wars Prequels"], 
-          review: "Anakin Skywalker, The Chosen One, falls to the dark side and becomes Darth Vader."
-         }, 
-        { 
-          id: 658,
-          myRating: 5, 
-          tags: ["Spy", "Action", "Adventure", "Thriller", "Suspense", "James Bond", "James Bond Classic Community", "James Bond: Sean Connery"], 
-          review: "James Bond investigates and tries to stop a gold-loving - and obsessed - villain from contaminating Fort Knox."
-        },
-        { 
-          id: 24428, 
-          myRating: 5, 
-          tags: ["Action", "Adventure", "Superhero", "Drama", "Fantasy", "Science-Fiction", "Comedy", "Avengers Series", "MCU", "Marvel Cinematic Universe", "MCU: Phase 1", "MCU: Infinity Saga"], 
-          review: "Nick Fury and his spy agency S.H.I.E.L.D. recruit Tony Stark, Natasha Romanoff, Clint Barton, Bruce Banner, Thor, and Steve Rogers to form a team, called the Avengers, which is capable of stopping Thor's brother Loki from ruling and conquering Earth."
-         }
-       ]; 
-      localStorage.setItem("myReviews", JSON.stringify(myReviews));
+// Load reviews from storage or seed defaults
+let myReviews = JSON.parse(localStorage.getItem("myReviews"));
+if (!myReviews) {
+  myReviews = [
+    {
+      id: 1895,
+      myRating: 3,
+      tags: ["Science-Fiction", "Action", "Adventure", "Drama"],
+      review: "Anakin Skywalker falls to the dark side and becomes Darth Vader."
+    },
+    {
+      id: 658,
+      myRating: 5,
+      tags: ["Spy", "Action", "Thriller"],
+      review: "James Bond attempts to stop a gold-obsessed villain."
+    },
+    {
+      id: 24428,
+      myRating: 5,
+      tags: ["Superhero", "Action", "Sci-Fi"],
+      review: "Earth’s mightiest heroes assemble to stop Loki."
     }
+  ];
+  localStorage.setItem("myReviews", JSON.stringify(myReviews));
+}
 
-    async function fetchMovieById(id) {
-      const response = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}&language=en-US`);
-      return response.json();
-    }
+// API helpers
+async function fetchMovieById(id) {
+  const res = await fetch(
+    `https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}&language=en-US`
+  );
+  return res.json();
+}
 
-    async function fetchMovieCredits(id) {
-      const res = await fetch(
-      `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${API_KEY}`
-      );
-     return res.json();
-    }
+async function fetchMovieCredits(id) {
+  const res = await fetch(
+    `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${API_KEY}`
+  );
+  return res.json();
+}
 
-    function saveReviews() {
-     localStorage.setItem("myReviews", JSON.stringify(myReviews));
-    }
+// Helpers
+function getDirector(crew) {
+  const d = crew.find(p => p.job === "Director");
+  return d ? d.name : "Unknown";
+}
 
-    function getDirector(crew) {
-     const director = crew.find(person => person.job === "Director");
-     return director ? director.name : "Unknown";
-    }
+function getCast(cast, limit = 5) {
+  return cast.slice(0, limit).map(a => a.name);
+}
 
-    function getCast(cast, limit = 5) {
-     return cast.slice(0, limit).map(actor => actor.name);
-    }
+function renderStars(rating) {
+  let stars = "";
+  for (let i = 1; i <= 5; i++) {
+    stars += `<span class="fa fa-star ${i <= rating ? "checked" : ""}"></span>`;
+  }
+  return stars;
+}
 
-    function renderStars(rating) {
-      let stars = "";
-      for (let i = 1; i <= 5; i++) {
-        stars += `<span class="fa fa-star ${i <= rating ? "checked" : ""}"></span>`;
-      }
-      return stars;
-    }
+function renderTags(tags) {
+  return tags.map(tag => `<span class="tag">${tag}</span>`).join("");
+}
 
-    function renderTags(tags) {
-      return tags.map(tag => `<span class="tag">${tag}</span>`).join("");
-    }
-
-    async function loadFullReview() {
+// MAIN loader
+async function loadFullReview() {
   if (!movieId) return;
 
   const review = myReviews.find(r => r.id == movieId);
@@ -108,59 +106,48 @@
   const director = getDirector(credits.crew);
   const cast = getCast(credits.cast);
 
+  const poster = movie.poster_path
+    ? IMAGE_BASE + movie.poster_path
+    : "Images/placeholder.jpg";
+
   reviewDetail.innerHTML = `
-    <h2>${movie.title}</h2>
-    <p><strong>Director:</strong> ${director}</p>
-    <p><strong>Cast:</strong> ${cast.join(", ")}</p>
-    <p>${review.review}</p>
-  `;
-}
+    <article class="review-detail-card">
+      <figure>
+        <img src="${poster}" alt="${movie.title}">
+      </figure>
 
-     const poster = movie.poster_path
-      ? IMAGE_BASE + movie.poster_path
-      : "Images/placeholder.jpg";
+      <h2>${movie.title} <span class="year">(${movie.release_date?.slice(0,4)})</span></h2>
 
-     reviewDetail.innerHTML = `
-       <article class="review-detail-card">
-         <figure>
-           <img src="${poster}" alt="${movie.title}">
-         </figure>
+      <p><strong>Runtime:</strong> ${movie.runtime} min</p>
 
-       <h2>${movie.title}</h2>
+      <div class="star-rating">${renderStars(review.myRating)}</div>
 
-       <h2>${movie.title} <span class="year">(${movie.release_date?.slice(0,4)})</span></h2>
+      <p><strong>Director:</strong> ${director}</p>
+      <p><strong>Cast:</strong> ${cast.join(", ")}</p>
 
-       <p><strong>Runtime:</strong> ${movie.runtime} min</p>
+      <div class="tags">${renderTags(review.tags)}</div>
 
-       <div class="star-rating">
-         ${renderStars(review.myRating)}
-       </div>
-
-       <p><strong>Director:</strong> ${director}</p>
-       <p><strong>Cast:</strong> ${cast.join(", ")}</p>
-
-       <div class="tags">
-         ${renderTags(review.tags)}
-       </div>
-
-       <p class="full-review">${review.review}</p>
+      <p class="full-review">${review.review}</p>
 
       <a href="reviews.html" class="back-btn">← Back to Reviews</a>
     </article>
   `;
 }
 
-window.addEventListener("storage", event => {
-  if (event.key === "myReviews") {
+// Sync across tabs
+window.addEventListener("storage", e => {
+  if (e.key === "myReviews") {
     myReviews = JSON.parse(localStorage.getItem("myReviews")) || [];
     loadFullReview();
   }
 });
 
+// Start
 loadFullReview();
-</script>
+  </script>
 </body>
 </html>
+
 
 
 

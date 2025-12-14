@@ -94,24 +94,27 @@
     }
 
     async function loadFullReview() {
-      if (!movieId) return;
-      const review = myReviews.find(r => r.id == movieId);
-      if (!review) {
-        reviewDetail.innerHTML = "<p>Review not found.</p>";
-      return;
-      }
+  if (!movieId) return;
 
-      try {
-       const movie = await fetchMovieById(movieId);
-       const credits = await fetchMovieCredits(movieId);
+  const review = myReviews.find(r => r.id == movieId);
+  if (!review) {
+    reviewDetail.innerHTML = "<p>Review not found.</p>";
+    return;
+  }
 
-       const director = getDirector(credits.crew || []);
-       const cast = getCast(credits.cast || []);
-      } catch (err) {
-        reviewDetail.innerHTML = "<p>Failed to load movie data.</p>";
-        console.error(err);
-      }
-    }
+  const movie = await fetchMovieById(movieId);
+  const credits = await fetchMovieCredits(movieId);
+
+  const director = getDirector(credits.crew);
+  const cast = getCast(credits.cast);
+
+  reviewDetail.innerHTML = `
+    <h2>${movie.title}</h2>
+    <p><strong>Director:</strong> ${director}</p>
+    <p><strong>Cast:</strong> ${cast.join(", ")}</p>
+    <p>${review.review}</p>
+  `;
+}
 
      const poster = movie.poster_path
       ? IMAGE_BASE + movie.poster_path
@@ -123,7 +126,11 @@
            <img src="${poster}" alt="${movie.title}">
          </figure>
 
-        <h2>${movie.title}</h2>
+       <h2>${movie.title}</h2>
+
+       <h2>${movie.title} <span class="year">(${movie.release_date?.slice(0,4)})</span></h2>
+
+       <p><strong>Runtime:</strong> ${movie.runtime} min</p>
 
        <div class="star-rating">
          ${renderStars(review.myRating)}
@@ -151,8 +158,9 @@ window.addEventListener("storage", event => {
 });
 
 loadFullReview();
-  </script>
+</script>
 </body>
 </html>
+
 
 

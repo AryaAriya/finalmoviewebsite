@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tag</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header class="banner">
+  <h1 id="tag-title"></h1>
+</header>
+
+<main>
+  <button id="admin-toggle" class="admin-btn">Admin Mode</button>
+  <button id="add-block" style="display:none;">Add Content</button>
+
+  <section id="tag-content" class="tag-content"></section>
+</main>
+
+<script>
+ const params = new URLSearchParams(window.location.search);
+const tag = params.get("tag");
+
+const title = document.getElementById("tag-title");
+const contentSection = document.getElementById("tag-content");
+const adminToggle = document.getElementById("admin-toggle");
+const addBtn = document.getElementById("add-block");
+
+let adminMode = false;
+
+// Load tag content
+let tagPages = JSON.parse(localStorage.getItem("tagPages")) || {};
+
+title.textContent = tag || "Tag";
+
+function renderTagPage() {
+  contentSection.innerHTML = "";
+
+  const blocks = tagPages[tag] || [];
+
+  if (!blocks.length && !adminMode) {
+    // BLANK PAGE (your requirement)
+    return;
+  }
+
+  blocks.forEach((block, index) => {
+    const div = document.createElement("div");
+    div.className = "tag-block";
+    div.innerHTML = `
+      <p>${block}</p>
+      ${
+        adminMode
+          ? `<button onclick="deleteBlock(${index})">Delete</button>`
+          : ""
+      }
+    `;
+    contentSection.appendChild(div);
+  });
+}
+
+// Admin mode
+adminToggle.addEventListener("click", () => {
+  adminMode = !adminMode;
+  addBtn.style.display = adminMode ? "block" : "none";
+  adminToggle.textContent = adminMode ? "Exit Admin Mode" : "Admin Mode";
+  renderTagPage();
+});
+
+// Add content
+addBtn.addEventListener("click", () => {
+  const text = prompt("Add content for this tag:");
+  if (!text) return;
+
+  tagPages[tag] = tagPages[tag] || [];
+  tagPages[tag].push(text);
+
+  localStorage.setItem("tagPages", JSON.stringify(tagPages));
+  renderTagPage();
+});
+
+function deleteBlock(index) {
+  tagPages[tag].splice(index, 1);
+  localStorage.setItem("tagPages", JSON.stringify(tagPages));
+  renderTagPage();
+}
+
+// Initial render
+renderTagPage();   
+</script>
+</body>
+</html>

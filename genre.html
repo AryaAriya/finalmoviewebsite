@@ -90,6 +90,9 @@ const reviewsSection = document.getElementById("reviews");
 const genreTitle = document.getElementById("genre-title");
 const selectedGenres = new Set();
 
+const searchIcon = document.querySelector('.search-icon');
+const searchInput = document.querySelector('.search-input');
+
 function getAllGenres() {
    const genres = new Set();
     myReviews.forEach(review => review.tags.forEach(tag => genres.add(tag)));
@@ -168,9 +171,6 @@ function renderReviewsByTag(tag) {
 }
 
  renderGenres();
-
-const searchIcon = document.querySelector('.search-icon');
-const searchInput = document.querySelector('.search-input');
     
 genreList.addEventListener("click", e => {
   if (!e.target.classList.contains("genre-tag")) return;
@@ -215,4 +215,5 @@ function renderReviewsBySelectedGenres() {
 </script>
 </body>
 </html>
+
 

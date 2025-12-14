@@ -84,8 +84,25 @@
 
 <script>
 // Search bar animation
-const searchIcon = document.querySelector('.search-icon');
-const searchInput = document.querySelector('.search-input');
+const myReviews = JSON.parse(localStorage.getItem("myReviews")) || [];
+const genreList = document.getElementById("genre-list");
+const reviewsSection = document.getElementById("reviews");
+const genreTitle = document.getElementById("genre-title");
+
+function getAllGenres() {
+   const genres = new Set();
+    myReviews.forEach(review => review.tags.forEach(tag => genres.add(tag)));
+    return [...genres].sort();
+}
+
+function renderGenres() {
+  const genres = getAllGenres();
+    genreList.innerHTML = genres.map(tag => 
+        `<button class="genre-tag" data-tag="${tag}">${tag}</button>`
+    ).join("");
+}
+
+
 
 searchIcon.addEventListener('click', () => {
     searchInput.classList.toggle('expanded');
@@ -105,59 +122,52 @@ window.addEventListener("storage", event => {
     location.reload();
   }
 });
-  
-const myReviews = JSON.parse(localStorage.getItem("myReviews")) || [];
-const genreList = document.getElementById("genre-list");
-
-function getAllGenres() {
-  const genres = new Set();
-
-  myReviews.forEach(review => {
-    review.tags.forEach(tag => genres.add(tag));
-  });
-
-  return [...genres].sort();
+    
+// Render stars for rating
+function renderStars(rating) {
+    let stars = "";
+    for (let i = 1; i <= 5; i++) {
+        stars += `<span class="fa fa-star ${i <= rating ? "checked" : ""}"></span>`;
+    }
+    return stars;
 }
 
-function renderGenres() {
-  const genres = getAllGenres();
+// Render review card
+function renderReviewCard(review) {
+    const article = document.createElement("article");
+    article.className = "review-card";
 
-  genreList.innerHTML = genres.map(tag => `
-    <a href="genre-results.html?tag=${encodeURIComponent(tag)}"
-       class="genre-tag">
-      ${tag}
-    </a>
-  `).join("");
+    article.innerHTML = `
+        <h3>${review.title || "Untitled Movie"}</h3>
+        <div class="star-rating">${renderStars(review.myRating || 0)}</div>
+        <div class="tags">${review.tags.map(t => `<span class="tag">${t}</span>`).join("")}</div>
+        <p>${review.review || ""}</p>
+    `;
+    reviewsSection.appendChild(article);
 }
 
-const params = new URLSearchParams(window.location.search);
-const selectedTag = params.get("tag");
+// Render reviews filtered by a tag
+function renderReviewsByTag(tag) {
+    reviewsSection.innerHTML = "";
+    genreTitle.textContent = `Genre: ${tag}`;
 
-document.getElementById("genre-title").textContent =
-  `Genre: ${selectedTag}`;
-
-const myReviews = JSON.parse(localStorage.getItem("myReviews")) || [];
-
-const filteredReviews = myReviews.filter(review =>
-  review.tags.includes(selectedTag)
-);
-
-async function loadGenreReviews() {
-  reviewsSection.innerHTML = "";
-
-  for (const review of filteredReviews) {
-    const movie = await fetchMovieById(review.id);
-    renderReviewCard({ ...movie, ...review });
-  }
+    const filtered = myReviews.filter(review => review.tags.includes(tag));
+    if (filtered.length === 0) {
+        reviewsSection.innerHTML = "<p>No reviews for this genre yet.</p>";
+        return;
+    }
+    filtered.forEach(review => renderReviewCard(review));
 }
 
-loadGenreReviews();
-renderGenres();
+ renderGenres();
+
+// Click on genre buttons
+genreList.addEventListener("click", e => {
+    if (e.target.classList.contains("genre-tag")) {
+        const tag = e.target.getAttribute("data-tag");
+        renderReviewsByTag(tag);
+    }
+});   
 </script>
 </body>
 </html>
-<!--
-
-
-
-

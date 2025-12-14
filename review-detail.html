@@ -11,13 +11,61 @@
   <header>
     <h1>Movie Review</h1>
   </header>
+
+  <nav class="navbar">
+         <!--Logo on the left-->
+         <div class="logo">
+            <img src="Images/temporary-logo.jpg" alt="logo"/> 
+          </div>
+
+          <!--Responsive Navigation Section-->
+          <ul class ="topnav">
+             <li><a href="index.html">Home</a></li>
+
+             <!-- Dropdown: Movie Reviews -->
+              <li class="dropdown reviews-menu">
+                <a href="reviews.html">Movie Reviews</a>
+              </li>
+
+             <li><a href="genre.html">Film Genres</a></li>
+             <li><a href="top20.html">Arya's Top 20</a></li>
+
+             <!-- Dropdown: Best and Worst -->
+             <li class="dropdown bestworst-menu">
+                <a href="#">Best and Worst</a>
+                  <div class="dropdown-content">
+                    <a href="monthlybestworst.html">Monthly</a>
+                    <a href="yearlybestworst.html">Yearly</a>
+                 </div>
+             </li>
+
+               <!-- Dropdown: Lists and Guides -->
+              <li class="dropdown lists-menu">
+                <a href="#">Lists and Guides</a>
+                  <div class="dropdown-content">
+                    <a href="filmseries.html">Film Series</a>
+                    <a href="genrespotlight.html">Genre Spotlights</a>
+                    <a href="streamingrecs.html">Streaming Recs</a>
+                 </div>
+             </li>
+
+             <li><a href="news.html">Movie News</a></li>
+             <li><a href="about.html">About</a></li>
+             <li><a href="contact.html">Contact</a></li>
+
+          <div class="search-container">
+            <input type="text" class="search-input"placeholder="Search...">
+            <button class="search-icon">🔍</button>
+          </div>
+        </ul>
+    </nav>
+  
   <main id="review-detail">
     <!-- Movie review content will load here -->
   </main>
   <footer>
     <p>&copy; 2025 Arya's Movie Musings</p>
   </footer>
-
   <script>
     const API_KEY = "00a29afc630db931314c32f156543971";
 const IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
@@ -147,6 +195,7 @@ loadFullReview();
   </script>
 </body>
 </html>
+
 
 
 

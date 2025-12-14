@@ -90,8 +90,6 @@ const adminToggle = document.getElementById("admin-toggle");
 const editBtn = document.getElementById("edit-review");
 const deleteBtn = document.getElementById("delete-review");
 
-const myReviews = JSON.parse(localStorage.getItem("myReviews")) || [];
-
 // Get movie ID
 const urlParams = new URLSearchParams(window.location.search);
 const movieId = urlParams.get("id");
@@ -256,6 +254,7 @@ loadFullReview();
   </script>
 </body>
 </html>
+
 
 
 

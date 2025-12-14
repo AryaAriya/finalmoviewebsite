@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Review Detail</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Movie Review</h1>
+  </header>
+  <main id="review-detail">
+    <!-- Movie review content will load here -->
+  </main>
+  <footer>
+    <p>&copy; 2025 Arya's Movie Musings</p>
+  </footer>
+
+  <script>
+    const API_KEY = "00a29afc630db931314c32f156543971";
+    const IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
+    const reviewDetail = document.getElementById("review-detail");
+
+    // Get the movie ID from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const movieId = urlParams.get("id");
+
+    // Your local reviews array (or fetch from localStorage if you save them there)
+    const myReviews = [
+      { id: 11, myRating: 5, tags: ["Sci-Fi", "Classic"], review: "A timeless space opera..." },
+      { id: 27205, myRating: 4, tags: ["Thriller", "Nolan"], review: "A cerebral heist..." },
+      { id: 603, myRating: 3, tags: ["Sci-Fi", "Cyberpunk"], review: "Stylish, influential..." }
+    ];
+
+    async function fetchMovieById(id) {
+      const response = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}&language=en-US`);
+      return response.json();
+    }
+
+    function renderStars(rating) {
+      let stars = "";
+      for (let i = 1; i <= 5; i++) {
+        stars += `<span class="fa fa-star ${i <= rating ? "checked" : ""}"></span>`;
+      }
+      return stars;
+    }
+
+    function renderTags(tags) {
+      return tags.map(tag => `<span class="tag">${tag}</span>`).join("");
+    }
+
+    async function loadFullReview() {
+      if (!movieId) return;
+      const review = myReviews.find(r => r.id == movieId);
+      if (!review) {
+        reviewDetail.innerHTML = "<p>Review not found.</p>";
+        return;
+      }
+
+      const movie = await fetchMovieById(movieId);
+      const poster = movie.poster_path ? IMAGE_BASE + movie.poster_path : "Images/placeholder.jpg";
+
+      reviewDetail.innerHTML = `
+        <figure>
+          <img src="${poster}" alt="${movie.title}">
+        </figure>
+        <h2>${movie.title}</h2>
+        <div class="star-rating">${renderStars(review.myRating)}</div>
+        <p>${review.review}</p>
+        <div class="tags">${renderTags(review.tags)}</div>
+        <a href="reviews.html">Back to Reviews</a>
+      `;
+    }
+
+    loadFullReview();
+  </script>
+</body>
+</html>

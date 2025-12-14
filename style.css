@@ -968,6 +968,25 @@ main {
   text-decoration: underline;
 }
 
+.genre-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.genre-tag {
+  padding: 10px 16px;
+  background: #7df9ff;
+  color: #333;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.genre-tag:hover {
+  background: #5edbe2;
+}
+
 /*Load more button*/
 #load-more { 
   display: block;
@@ -999,5 +1018,6 @@ footer {
 footer p {
   margin: 0;
 }
+
 
 

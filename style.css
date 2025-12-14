@@ -929,6 +929,38 @@ main {
   background-color: #ff4757;
 }
 
+.admin-btn {
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.admin-draft {
+  border: 2px dashed #c9a14a;
+}
+
+.admin-draft input,
+.admin-draft textarea {
+  width: 100%;
+  margin: 0.4rem 0;
+  padding: 0.6rem;
+  font-family: inherit;
+}
+
+.admin-draft textarea {
+  min-height: 120px;
+}
+
+.admin-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.admin-controls button {
+  flex: 1;
+  cursor: pointer;
+}
+
 /*Star rating*/
 .star-rating {
   margin: 0.5rem 0;
@@ -1018,6 +1050,7 @@ footer {
 footer p {
   margin: 0;
 }
+
 
 
 

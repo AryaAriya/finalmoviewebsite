@@ -1000,6 +1000,25 @@ main {
   text-decoration: underline;
 }
 
+.genre-tag {
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  background: #111;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.genre-tag:hover {
+  background: #333;
+}
+
+.genre-tag.active {
+  background: #e50914;
+  border-color: #e50914;
+}
+
 .genre-list {
   display: flex;
   flex-wrap: wrap;
@@ -1050,6 +1069,7 @@ footer {
 footer p {
   margin: 0;
 }
+
 
 
 

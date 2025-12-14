@@ -182,27 +182,6 @@ function renderTags(tags) {
   }
   return tags.map(tag => `<span class="tag">${tag}</span>`).join("");
 }
-
-//Render posts dynamically
-function renderPosts(movies) {
-  movies.forEach(movie => {
-    const poster = movie.poster_path
-   ? IMAGE_BASE + movie.poster_path
-   : "Images/placeholder.jpg";
-    const article = document.createElement("article");
-    article.classList.add("review-card");
-    article.innerHTML = `
-      <figure>
-        <img src="${poster}" alt="${movie.title} poster">
-      </figure>
-      <h2>${movie.title}</h2>
-      <p>${movie.overview}</p>
-      <div class="star-rating">${renderStars(movie.myRating)}</div>
-      <div class="tags">${renderTags(movie.tags)}</div>
-    `;
-    reviewsSection.appendChild(article);
-  });
-}
   
 //First click loads posts
 async function loadMoreMovies() {
@@ -312,4 +291,5 @@ document.querySelectorAll(".transition-link").forEach(link => {
 </script>
 </body>
 </html>
+
 

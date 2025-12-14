@@ -145,6 +145,7 @@ const adminToggle = document.getElementById("admin-toggle");
 const addBtn = document.getElementById("add-review");
 
 let myReviews = [];
+  
 function loadSavedReviews {
   const saved = localStorage.getItem("myReviews");
   if (saved) {
@@ -178,15 +179,6 @@ function loadSavedReviews {
 // Helper to save reviews to localStorage (optional, since you call saveReviews)
 function saveReviews() {
   localStorage.setItem('myReviews', JSON.stringify(myReviews));
-}
-
-// Helper to load reviews from localStorage on page load
-function loadSavedReviews() {
-  const saved = localStorage.getItem('myReviews');
-  if (saved) {
-    const parsed = JSON.parse(saved);
-    myReviews.splice(0, myReviews.length, ...parsed);
-  }
 }
 
 // Fetch movie details by ID from TMDb API
@@ -278,10 +270,6 @@ async function loadMyReviews() {
     }
   }
 
-  function saveReviews() {
-    localStorage.setItem("myReviews", JSON.stringify(myReviews));
-  }
-
   // Hide the loader when done
   const loader = document.querySelector(".loader");
   if (loader) {
@@ -321,11 +309,11 @@ addBtn.addEventListener("click", () => {
 
 // Load saved reviews from localStorage on page load
 loadSavedReviews();
-// Initial load
 loadMyReviews();
 </script>
 </body>
 </html>
+
 
 
 

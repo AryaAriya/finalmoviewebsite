@@ -145,7 +145,7 @@ const adminToggle = document.getElementById("admin-toggle");
 const addBtn = document.getElementById("add-review");
 
 let myReviews = [];
-function loadSavedReviews{
+function loadSavedReviews {
   const saved = localStorage.getItem("myReviews");
   if (saved) {
     myReviews = JSON.parse(saved);
@@ -213,7 +213,10 @@ function renderTags(tags) {
 
 // Render review card dynamically
 function renderReviewCard(movie, index) {
-  const poster = movie.poster_path ? IMAGE_BASE + movie.poster_path : "Images/placeholder.jpg";
+  const poster = movie.poster_path
+    ? IMAGE_BASE + movie.poster_path
+    : "Images/placeholder.jpg";
+
   const article = document.createElement("article");
   article.className = "review-card";
 
@@ -232,33 +235,21 @@ function renderReviewCard(movie, index) {
       ${renderTags(movie.tags)}
     </div>
 
-    <a href="review-detail.html?id=${movie.id}" class="read-full-btn">Read Full Review</a>
-    
-    ${adminMode ? `
-      <div class="admin-controls">
-        <button onclick="editReview(${index})">Edit</button>
-        <button onclick="deleteReview(${index})">Delete</button>
-      </div>
-    ` : ""}
+    <a href="review-detail.html?id=${movie.id}" class="read-full-btn">
+      Read Full Review
+    </a>
+
+    ${
+      adminMode
+        ? `<div class="admin-controls">
+            <button onclick="editReview(${index})">Edit</button>
+            <button onclick="deleteReview(${index})">Delete</button>
+          </div>`
+        : ""
+    }
   `;
 
   reviewsSection.appendChild(article);
-}
-
-// Edit review function
-function editReview(index) {
-  const review = myReviews[index];
-
-  const newRating = prompt("Rating (1–5):", review.myRating);
-  const newTags = prompt("Tags (comma-separated):", review.tags.join(", "));
-  const newText = prompt("Review text:", review.review);
-
-  if (newRating) review.myRating = Number(newRating);
-  if (newTags) review.tags = newTags.split(",").map(t => t.trim());
-  if (newText) review.review = newText;
-
-  saveReviews();
-  loadMyReviews();
 }
 
 // Delete review function
@@ -335,6 +326,7 @@ loadMyReviews();
 </script>
 </body>
 </html>
+
 
 
 

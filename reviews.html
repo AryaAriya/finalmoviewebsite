@@ -144,7 +144,13 @@ let adminMode = false;
 const adminToggle = document.getElementById("admin-toggle");
 const addBtn = document.getElementById("add-review");
 
-const myReviews = JSON.parse(localStorage.getItem("myReviews")) || [
+let myReviews = [];
+function loadSavedReviews{
+  const saved = localStorage.getItem("myReviews");
+  if (saved) {
+    myReviews = JSON.parse(saved);
+  } else {
+    myReviews = [
   {
     id: 1895,
     myRating: 3,
@@ -164,6 +170,10 @@ const myReviews = JSON.parse(localStorage.getItem("myReviews")) || [
     review: "Nick Fury and his spy agency S.H.I.E.L.D. recruit Tony Stark, Natasha Romanoff, Clint Barton, Bruce Banner, Thor, and Steve Rogers to form a team, called the Avengers, which is capable of stopping Thor's brother Loki from ruling and conquering Earth."
   }
 ];
+
+    saveReviews();
+  }
+}
 
 // Helper to save reviews to localStorage (optional, since you call saveReviews)
 function saveReviews() {
@@ -320,12 +330,12 @@ addBtn.addEventListener("click", () => {
 
 // Load saved reviews from localStorage on page load
 loadSavedReviews();
-
 // Initial load
 loadMyReviews();
 </script>
 </body>
 </html>
+
 
 
 

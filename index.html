@@ -160,15 +160,15 @@ function renderReviewCard(review) {
     article.className = "review-card";
 
     article.innerHTML = `
-       <!-- Movie Poster -->
-        <div class="poster">
-            <img src="${review.poster || 'Images/default-poster.jpg'}" alt="${review.title || 'Untitled Movie'} Poster">
+        <img class="review-poster" 
+             src="${review.poster || 'Images/default-poster.jpg'}" 
+             alt="${review.title || 'Untitled Movie'} Poster">
+
+        <h3>${review.title || "Untitled Movie"}</h3>
+
+        <div class="star-rating">
+            ${renderStars(review.myRating)}
         </div>
-
-        <!-- Movie Title -->
-        <h3 class="movie-title">${review.title || "Untitled Movie"}</h3>
-
-        <div class="star-rating">${renderStars(review.myRating)}</div>
 
         <div class="tags">
             ${review.tags.map(tag => 
@@ -262,6 +262,7 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 </body>
 </html>
+
 
 
 

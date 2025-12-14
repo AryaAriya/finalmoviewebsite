@@ -108,8 +108,8 @@
   <!--Movie Reviews-->
      <button id="admin-toggle" class="admin-btn">Admin Mode</button>
      <button id="add-review" style="display:none;">Add Review</button>
-     <a href="tags/tag.html?tag=2024" class="tag">2024</a>
-     <a href="tags/tag.html?tag=Sci-Fi" class="tag">Sci-Fi</a>
+     <a href="tag/tag.html?tag=2024" class="tag">2024</a>
+     <a href="tag/tag.html?tag=Sci-Fi" class="tag">Sci-Fi</a>
       <!-- Load More Button -->
 </main>
 <!-- Footer -->
@@ -135,13 +135,6 @@ document.addEventListener('click', (event) => {
 });
 
 // DOM references
-
-
-let adminMode = false;
-const adminToggle = document.getElementById("admin-toggle");
-const addBtn = document.getElementById("add-review");
-
-
 // Helper to save reviews to localStorage (optional, since you call saveReviews)
 function saveReviews() {
   localStorage.setItem('myReviews', JSON.stringify(myReviews));
@@ -160,17 +153,8 @@ function renderTags(tags) {
     loader.style.display = "none";
     loader.setAttribute("aria-hidden", "true");
   }
-
-// Admin toggle click event
-adminToggle.addEventListener("click", () => {
-  adminMode = !adminMode;
-  adminToggle.classList.toggle("active");
-  adminToggle.textContent = adminMode ? "Exit Admin Mode" : "Admin Mode";
-  addBtn.style.display = adminMode ? "block" : "none";
-  loadMyReviews();
-});
-
 </script>
 </body>
 </html>
+
 

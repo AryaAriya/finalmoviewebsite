@@ -146,7 +146,7 @@ const addBtn = document.getElementById("add-review");
 
 let myReviews = [];
   
-function loadSavedReviews {
+function loadSavedReviews() {
   const saved = localStorage.getItem("myReviews");
   if (saved) {
     myReviews = JSON.parse(saved);
@@ -313,6 +313,7 @@ loadMyReviews();
 </script>
 </body>
 </html>
+
 
 
 

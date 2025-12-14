@@ -68,17 +68,29 @@
           </div>
         </ul>
     </nav>
-  
-  <main id="review-detail">
+
+<button id="admin-toggle" class="admin-btn">Admin Mode</button>
+<button id="edit-review" style="display:none;">Edit Review</button>
+<button id="delete-review" style="display:none;">Delete Review</button>
+
+<main id="review-detail">
     <!-- Movie review content will load here -->
   </main>
   <footer>
     <p>&copy; 2025 Arya's Movie Musings</p>
   </footer>
   <script>
-    const API_KEY = "00a29afc630db931314c32f156543971";
+const API_KEY = "00a29afc630db931314c32f156543971";
 const IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
 const reviewDetail = document.getElementById("review-detail");
+
+let adminMode = false;
+
+const adminToggle = document.getElementById("admin-toggle");
+const editBtn = document.getElementById("edit-review");
+const deleteBtn = document.getElementById("delete-review");
+
+const myReviews = JSON.parse(localStorage.getItem("myReviews")) || [];
 
 // Get movie ID
 const urlParams = new URLSearchParams(window.location.search);
@@ -109,6 +121,34 @@ if (!myReviews) {
   ];
   localStorage.setItem("myReviews", JSON.stringify(myReviews));
 }
+
+editBtn.addEventListener("click", () => {
+  const review = myReviews.find(r => r.id == movieId);
+  if (!review) return;
+
+  const newRating = prompt("Rating (1–5):", review.myRating);
+  const newTags = prompt("Tags (comma-separated):", review.tags.join(", "));
+  const newText = prompt("Full review:", review.review);
+
+  if (newRating) review.myRating = Number(newRating);
+  if (newTags) review.tags = newTags.split(",").map(t => t.trim());
+  if (newText) review.review = newText;
+
+  saveReviews();
+  loadFullReview();
+});
+
+deleteBtn.addEventListener("click", () => {
+  if (!confirm("Delete this review permanently?")) return;
+
+  const index = myReviews.findIndex(r => r.id == movieId);
+  if (index === -1) return;
+
+  myReviews.splice(index, 1);
+  saveReviews();
+
+  window.location.href = "reviews.html";
+});
 
 // API helpers
 async function fetchMovieById(id) {
@@ -157,6 +197,10 @@ async function loadFullReview() {
     return;
   }
 
+function saveReviews() {
+  localStorage.setItem("myReviews", JSON.stringify(myReviews));
+}
+
   const movie = await fetchMovieById(movieId);
   const credits = await fetchMovieCredits(movieId);
 
@@ -173,7 +217,7 @@ async function loadFullReview() {
         <img src="${poster}" alt="${movie.title}">
       </figure>
 
-      <h2>${movie.title} <span class="year">(${movie.release_date?.slice(0,4)})</span></h2>
+      <h2>${movie.title}</h2>
 
       <p><strong>Runtime:</strong> ${movie.runtime} min</p>
 
@@ -191,6 +235,14 @@ async function loadFullReview() {
   `;
 }
 
+adminToggle.addEventListener("click", () => {
+  adminMode = !adminMode;
+  adminToggle.textContent = adminMode ? "Exit Admin Mode" : "Admin Mode";
+
+  editBtn.style.display = adminMode ? "inline-block" : "none";
+  deleteBtn.style.display = adminMode ? "inline-block" : "none";
+});
+
 // Sync across tabs
 window.addEventListener("storage", e => {
   if (e.key === "myReviews") {
@@ -204,6 +256,7 @@ loadFullReview();
   </script>
 </body>
 </html>
+
 
 
 

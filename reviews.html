@@ -144,7 +144,7 @@ let adminMode = false;
 const adminToggle = document.getElementById("admin-toggle");
 const addBtn = document.getElementById("add-review");
 
-const myReviews = [
+const myReviews = JSON.parse(localStorage.getItem("myReviews")) || [
   {
     id: 1895,
     myRating: 3,
@@ -277,6 +277,10 @@ async function loadMyReviews() {
     }
   }
 
+  function saveReviews() {
+    localStorage.setItem("myReviews", JSON.stringify(myReviews));
+  }
+
   // Hide the loader when done
   const loader = document.querySelector(".loader");
   if (loader) {
@@ -322,6 +326,7 @@ loadMyReviews();
 </script>
 </body>
 </html>
+
 
 
 

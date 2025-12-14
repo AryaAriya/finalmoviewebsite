@@ -107,7 +107,7 @@
 <!-- Main Content -->
 <main>
   <!--Movie Reviews-->
-      <section id="reviews" class="reviews"></section>
+      <section id="home-reviews" class="reviews"></section>
       <!-- Load More Button -->
       <button id="load-more">Load More</button>
 </main>
@@ -133,41 +133,17 @@ document.addEventListener('click', (event) => {
     }
 });
 //DOM references
-  const API_KEY = "00a29afc630db931314c32f156543971"; // 🔑 replace with your TMDb key
-  const IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
-  const reviewsSection = document.getElementById("reviews");
-  const loadMoreBtn = document.getElementById("load-more");
-
-  const myMovieData = {
-  starwars: { myRating: 5, tags: ["Sci-Fi", "Adventure", "Classic"] },
-  inception: { myRating: 4, tags: ["Thriller", "Mind-Bending", "Nolan"] },
-  matrix: { myRating: 3, tags: ["Sci-Fi", "Cyberpunk", "Action"] }
-};;
-
-  let currentPage = 1;
-  
-  async function fetchMovies(page = 1) {
-  const url = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=${page}`;
-  const response = await fetch(url);
-  const data = await response.json();
-  return data.results; // array of movies
+// LOAD REVIEWS
+// --------------------
+function getMyReviews() {
+  return JSON.parse(localStorage.getItem("myReviews")) || [];
 }
 
-function mergeMovieData(apiMovies) {
-  return apiMovies.map(movie => {
-  const key = movie.title
-    .toLowerCase()
-    .replace(/^the\s+/, "")
-    .replace(/[^a-z0-9]/g, "")
-  const custom = myMovieData[key];
-    return {
-      ...movie,
-      myRating: custom?.myRating ?? null,
-      tags: custom?.tags ?? []
-    };
-  });
-}
+const reviewsSection = document.getElementById("home-reviews");
 
+// --------------------
+// RENDER HELPERS
+// --------------------
 function renderStars(rating = 0) {
   let stars = "";
   for (let i = 1; i <= 5; i++) {
@@ -176,26 +152,63 @@ function renderStars(rating = 0) {
   return stars;
 }
 
-function renderTags(tags) {
-  if (!tags.length) {
-    return `<span class="tag">Popular</span>`;
-  }
-  return tags.map(tag => `<span class="tag">${tag}</span>`).join("");
+function renderReviewCard(review) {
+  const article = document.createElement("article");
+  article.className = "review-card";
+
+  article.innerHTML = `
+    <h3>${review.title || "Untitled Movie"}</h3>
+
+    <div class="star-rating">
+      ${renderStars(review.myRating)}
+    </div>
+
+    <div class="tags">
+      ${review.tags.map(tag =>
+        `<a href="tags/tag.html?tag=${encodeURIComponent(tag)}" class="tag">${tag}</a>`
+      ).join("")}
+    </div>
+
+    <p class="review-snippet">
+      ${review.review.slice(0, 140)}…
+    </p>
+
+    <a href="review-detail.html?id=${review.id}" class="read-full-btn">
+      Read Full Review
+    </a>
+  `;
+
+  reviewsSection.appendChild(article);
 }
-  
-//First click loads posts
-async function loadMoreMovies() {
-   try {
-  const apiMovies = await fetchMovies(currentPage);
-  const enrichedMovies = mergeMovieData(apiMovies);
-  renderPosts(enrichedMovies);
-  currentPage++;
+
+// --------------------
+// RENDER ALL REVIEWS
+// --------------------
+function renderHomeReviews() {
+  reviewsSection.innerHTML = "";
+
+  const reviews = getMyReviews();
+
+  if (!reviews.length) {
+    reviewsSection.innerHTML = "<p>No reviews yet.</p>";
+    return;
   }
-  catch (error) {
-    console.error("Movie loading failed:", error);
-  }
+
+  // Optional: only show latest 6
+  reviews.slice(0, 6).forEach(renderReviewCard);
 }
-  
+
+// --------------------
+// SYNC ACROSS PAGES
+// --------------------
+window.addEventListener("storage", e => {
+  if (e.key === "myReviews") {
+    renderHomeReviews();
+  }
+});
+
+// Initial render
+renderHomeReviews();
  // Initial load
   loadMoreMovies();
   loadMoreBtn.addEventListener("click", loadMoreMovies);
@@ -291,6 +304,7 @@ document.querySelectorAll(".transition-link").forEach(link => {
 </script>
 </body>
 </html>
+
 
 
 

@@ -203,10 +203,7 @@ function renderTags(tags) {
 
 // Render review card dynamically
 function renderReviewCard(movie, index) {
-  const poster = movie.poster_path
-    ? IMAGE_BASE + movie.poster_path
-    : "Images/placeholder.jpg";
-
+  const poster = movie.poster_path ? IMAGE_BASE + movie.poster_path : "Images/placeholder.jpg";
   const article = document.createElement("article");
   article.className = "review-card";
 
@@ -221,12 +218,12 @@ function renderReviewCard(movie, index) {
       ${renderStars(movie.myRating)}
     </div>
 
-    <p class="review-text">${movie.review}</p>
-
     <div class="tags">
       ${renderTags(movie.tags)}
     </div>
 
+    <a href="review-detail.html?id=${movie.id}" class="read-full-btn">Read Full Review</a>
+    
     ${adminMode ? `
       <div class="admin-controls">
         <button onclick="editReview(${index})">Edit</button>
@@ -325,5 +322,6 @@ loadMyReviews();
 </script>
 </body>
 </html>
+
 
 

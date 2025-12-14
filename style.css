@@ -912,6 +912,23 @@ main {
   color: #FFFFFF;
 }
 
+/* Review Card Button */
+.review-card .read-full-btn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #ff6b6b; /* accent color */
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.review-card .read-full-btn:hover {
+  background-color: #ff4757;
+}
+
 /*Star rating*/
 .star-rating {
   margin: 0.5rem 0;
@@ -982,4 +999,5 @@ footer {
 footer p {
   margin: 0;
 }
+
 

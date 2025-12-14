@@ -114,15 +114,21 @@
   <p>&copy; 2025 Arya's Movie Musings</p>
 </footer>
 <script>  
-//Search bar animation 
+// --------------------
+// DOM References
+// --------------------
 const searchIcon = document.querySelector('.search-icon');
 const searchInput = document.querySelector('.search-input');
+const reviewsSection = document.getElementById("home-reviews");
+const loader = document.querySelector(".loader");
+const body = document.body;
 
+// --------------------
+// SEARCH BAR TOGGLE
+// --------------------
 searchIcon.addEventListener('click', () => {
     searchInput.classList.toggle('expanded');
-    if (searchInput.classList.contains('expanded')) {
-        searchInput.focus();
-    }
+    if (searchInput.classList.contains('expanded')) searchInput.focus();
 });
 
 document.addEventListener('click', (event) => {
@@ -130,172 +136,127 @@ document.addEventListener('click', (event) => {
         searchInput.classList.remove('expanded');
     }
 });
-//DOM references
+
+// --------------------
 // LOAD REVIEWS
 // --------------------
 function getMyReviews() {
-  return JSON.parse(localStorage.getItem("myReviews")) || [];
+    return JSON.parse(localStorage.getItem("myReviews")) || [];
 }
-
-const reviewsSection = document.getElementById("home-reviews");
 
 // --------------------
 // RENDER HELPERS
 // --------------------
 function renderStars(rating = 0) {
-  let stars = "";
-  for (let i = 1; i <= 5; i++) {
-    stars += `<span class="fa fa-star ${i <= rating ? "checked" : ""}"></span>`;
-  }
-  return stars;
+    let stars = "";
+    for (let i = 1; i <= 5; i++) {
+        stars += `<span class="fa fa-star ${i <= rating ? "checked" : ""}"></span>`;
+    }
+    return stars;
 }
 
 function renderReviewCard(review) {
-  const article = document.createElement("article");
-  article.className = "review-card";
+    const article = document.createElement("article");
+    article.className = "review-card";
 
-  article.innerHTML = `
-    <h3>${review.title || "Untitled Movie"}</h3>
+    article.innerHTML = `
+        <h3>${review.title || "Untitled Movie"}</h3>
 
-    <div class="star-rating">
-      ${renderStars(review.myRating)}
-    </div>
+        <div class="star-rating">${renderStars(review.myRating)}</div>
 
-    <div class="tags">
-      ${review.tags.map(tag =>
-        `<a href="tags/tag.html?tag=${encodeURIComponent(tag)}" class="tag">${tag}</a>`
-      ).join("")}
-    </div>
+        <div class="tags">
+            ${review.tags.map(tag => 
+                `<a href="tags/tag.html?tag=${encodeURIComponent(tag)}" class="tag">${tag}</a>`
+            ).join("")}
+        </div>
 
-    <p class="review-snippet">
-      ${review.review.slice(0, 140)}…
-    </p>
+        <p class="review-snippet">
+            ${(review.review || "").slice(0, 140)}…
+        </p>
 
-    <a href="review-detail.html?id=${review.id}" class="read-full-btn">
-      Read Full Review
-    </a>
-  `;
+        <a href="review-detail.html?id=${review.id}" class="read-full-btn">Read Full Review</a>
+    `;
 
-  reviewsSection.appendChild(article);
+    reviewsSection.appendChild(article);
 }
 
 // --------------------
-// RENDER ALL REVIEWS
+// RENDER HOME REVIEWS
 // --------------------
 function renderHomeReviews() {
-  reviewsSection.innerHTML = "";
+    reviewsSection.innerHTML = "";
 
-  const reviews = getMyReviews();
+    const reviews = getMyReviews();
 
-  if (!reviews.length) {
-    reviewsSection.innerHTML = "<p>No reviews yet.</p>";
-    return;
-  }
+    if (!reviews.length) {
+        reviewsSection.innerHTML = "<p>No reviews yet.</p>";
+        return;
+    }
 
-  // Optional: only show latest 6
-  reviews.slice(0, 6).forEach(renderReviewCard);
+    // Show latest 6 reviews
+    reviews.slice(0, 6).forEach(renderReviewCard);
 }
 
 // --------------------
 // SYNC ACROSS PAGES
 // --------------------
-window.addEventListener("storage", e => {
-  if (e.key === "myReviews") {
-    renderHomeReviews();
-  }
-});
-
-  const loader = document.querySelector(".loader");
-  const body = document.body;
-
-//Hide loader once the page is fully loaded
-window.addEventListener("load", () => {
-
- setTimeout(() =>{
-   body.classList.add("loaded");
-   loader.classList.add("fade-out"); // fade out loader
-
-   loader.addEventListener("transitionend", (e) => {
-    if (e.propertyName === "opacity") {
-      loader.style.display = "none";
-   }
-  }, { once: true });
- }, 2000);
-});
-
-//Page transition function
-function triggerPageTransition(targetUrl) {
-  body.classList.remove("loaded");
-  loader.style.display = "flex";       // show loader
-  loader.classList.remove("fade-out"); // reset state
-  
-  //Start fade-out after short delay
-  setTimeout(() => {
-    loader.classList.add("fade-out");
-
-   //Navigate once fade-out animation is done
-    loader.addEventListener("transitionend", (e) => {
-     if (e.propertyName === "opacity") {
-      loader.style.display = "none";
-      window.location.href = targetUrl;
+window.addEventListener("storage", (e) => {
+    if (e.key === "myReviews") {
+        renderHomeReviews();
     }
-  }, { once: true });  
- }, 2000);
+});
+
+// --------------------
+// LOADER
+// --------------------
+function hideLoader() {
+    if (!loader) return;
+    body.classList.add("loaded");
+    loader.classList.add("fade-out");
+    loader.addEventListener("transitionend", () => {
+        loader.style.display = "none";
+    }, { once: true });
 }
 
-//Attach transition behavior to all links with .transition-link
-document.querySelectorAll(".transition-link").forEach(link => {
-  link.addEventListener("click", (e) => {
-    e.preventDefault(); // stop instant navigation
-    const targetUrl = link.getAttribute("href");
-    triggerPageTransition(targetUrl);
-  });
+// Hide loader when page is fully loaded
+window.addEventListener("load", () => {
+    setTimeout(hideLoader, 2000);
+});
 
-(function () {
-  const loader = document.querySelector(".loader");
-  if (!loader) return;
+// --------------------
+// PAGE TRANSITIONS
+// --------------------
+function triggerPageTransition(targetUrl) {
+    body.classList.remove("loaded");
+    if (loader) loader.style.display = "flex";
+    loader?.classList.remove("fade-out");
 
-  let killed = false;
-
-  function hideLoader(reason = "unknown") {
-    if (killed) return;
-    killed = true;
-
-    console.info("Loader dismissed:", reason);
-
-    document.body.classList.add("loaded");
-    loader.classList.add("is-hidden");
-
-    // Hard removal after transition
     setTimeout(() => {
-      loader.classList.add("is-dead");
-    }, 700);
-  }
+        loader?.classList.add("fade-out");
+        loader?.addEventListener("transitionend", () => {
+            window.location.href = targetUrl;
+        }, { once: true });
+    }, 2000);
+}
 
-  /* DOM is ready — never wait for images */
-  document.addEventListener("DOMContentLoaded", () => {
-    hideLoader("DOM ready");
-  });
+document.querySelectorAll(".transition-link").forEach(link => {
+    link.addEventListener("click", (e) => {
+        e.preventDefault();
+        triggerPageTransition(link.getAttribute("href"));
+    });
+});
 
-  /*Absolute failsafe — even if DOMContentLoaded fails */
-  setTimeout(() => {
-    hideLoader("failsafe timeout");
-  }, 4000);
-
-  /*If ANY JS error happens, kill loader */
-  window.addEventListener("error", () => {
-    hideLoader("js error");
-  });
-
-  /*If a promise is rejected */
-  window.addEventListener("unhandledrejection", () => {
-    hideLoader("promise rejection");
-  });
-})();  
+// --------------------
+// INITIALIZE
+// --------------------
+document.addEventListener("DOMContentLoaded", () => {
+    renderHomeReviews();
+    hideLoader();
 });
 </script>
 </body>
 </html>
+
 
 
 

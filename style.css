@@ -19,7 +19,7 @@ body{
   background: #f9d594; 
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 150vh;
 }
 
 :root{
@@ -57,7 +57,7 @@ body{
   inset: 0;
   top: 0;
   left: 0;
-  width: 100%;
+  width: %;
   height: 100%;
   background: var(--color-bg-dark); 
   display: flex;
@@ -1201,6 +1201,7 @@ footer {
 footer p {
   margin: 0;
 }
+
 
 
 

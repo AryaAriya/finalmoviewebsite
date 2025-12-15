@@ -46,12 +46,11 @@
     <header class="banner">
         <!--Banner-->
         <div class="logo-one">
-           <h2>
+           <h3>
             Arya's
-            <span>Arya's</span>
-            <span>Arya's</span>
-            <span>Movie Musings</span>
-          </h2>
+            Movie
+            Musings
+          </h3>
         </div>
     </header>
     
@@ -162,9 +161,43 @@ function topFunction() {
   document.body.scrollTop = 0;
   document.documentElement.scrollTop = 0;
 }
+
+  //Page Transitions
+  function navigateWithLoader(url) {
+    if (!loader) {
+      window.location.href = url;
+      return;
+    }
+
+    loader.style.display = "flex";
+    loader.classList.remove("fade-out");
+
+    setTimeout(() => {
+      window.location.href = url;
+    }, 600);
+  }
+
+  //Intercept all internal links 
+  document.querySelectorAll("a[href]").forEach(link => {
+    const href = link.getAttribute("href");
+
+    if (
+      !href ||
+      href.startsWith("#") ||
+      href.startsWith("http") ||
+      href.startsWith("mailto") ||
+      href.startsWith("tel")
+    ) return;
+
+    link.addEventListener("click", e => {
+      e.preventDefault();
+      navigateWithLoader(href);
+    });
+  });
 </script>
 </body>
 </html>
+
 
 
 

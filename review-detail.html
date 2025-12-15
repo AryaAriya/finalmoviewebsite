@@ -185,6 +185,10 @@ function renderTags(tags) {
   return tags.map(tag => `<span class="tag">${tag}</span>`).join("");
 }
 
+function saveReviews() {
+  localStorage.setItem("myReviews", JSON.stringify(myReviews));
+}
+
 // MAIN loader
 async function loadFullReview() {
   if (!movieId) return;
@@ -194,10 +198,6 @@ async function loadFullReview() {
     reviewDetail.innerHTML = "<p>Review not found.</p>";
     return;
   }
-
-function saveReviews() {
-  localStorage.setItem("myReviews", JSON.stringify(myReviews));
-}
 
   const movie = await fetchMovieById(movieId);
   const credits = await fetchMovieCredits(movieId);
@@ -263,6 +263,7 @@ loadFullReview();
   </script>
 </body>
 </html>
+
 
 
 

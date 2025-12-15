@@ -310,13 +310,6 @@ async function renderReviewsBySelectedGenres() {
   filtered.forEach(renderReviewCard);
 }   
 
-const urlParams = new URLSearchParams(window.location.search);
-const selectedTagFromURL = urlParams.get("tag");
-if (selectedTagFromURL) {
-  const tagButton = document.querySelector(`.genre-tag[data-tag="${selectedTagFromURL}"]`);
-  if (tagButton) tagButton.click(); // triggers filtering
-}
-
 //Get the back to top button
 let mybutton = document.getElementById("myBtn");
 
@@ -380,6 +373,7 @@ window.addEventListener("load", () => {
 </script>
 </body>
 </html>
+
 
 
 

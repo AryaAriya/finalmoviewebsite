@@ -377,7 +377,7 @@ footer{
 .logo-one {
   font-family: 'Playfair Display', serif;
   white-space: nowrap;
-  margin-left: 20px;
+  margin-left: 25px;
 
   /*Scaling */
   font-size: clamp(0.5rem, 1.25vw, 1rem);
@@ -1219,6 +1219,7 @@ footer {
 footer p {
   margin: 0;
 }
+
 
 
 

@@ -2,114 +2,128 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tag</title>
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 
+<!-- Loader (optional) -->
+<div class="loader" aria-hidden="true">
+  <style>
+  /* Loader styles (similar to homepage) */
+  .loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease;
+  }
+
+  .loader.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+</style>
+</div>
+
+<!-- Header -->
 <header class="banner">
-  <h1 id="tag-title"></h1>
+  <h1 id="tag-title">Tag</h1>
 </header>
 
- <nav class="navbar">
-         <!--Logo on the left-->
-         <div class="logo">
-            <img src="Images/temporary-logo.jpg" alt="logo"/> 
-          </div>
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="logo">
+    <img src="../Images/temporary-logo.jpg" alt="logo">
+  </div>
+  <ul class="topnav">
+    <li><a href="../index.html">Home</a></li>
+    <li class="dropdown"><a href="../reviews.html">Movie Reviews</a></li>
+    <li><a href="../genre.html">Film Genres</a></li>
+    <li><a href="../top20.html">Arya's Top 20</a></li>
+    <li class="dropdown">
+      <a href="#">Best and Worst</a>
+      <div class="dropdown-content">
+        <a href="../monthlybestworst.html">Monthly</a>
+        <a href="../yearlybestworst.html">Yearly</a>
+      </div>
+    </li>
+    <li class="dropdown">
+      <a href="#">Lists and Guides</a>
+      <div class="dropdown-content">
+        <a href="../filmseries.html">Film Series</a>
+        <a href="../genrespotlight.html">Genre Spotlights</a>
+        <a href="../streamingrecs.html">Streaming Recs</a>
+      </div>
+    </li>
+    <li><a href="../news.html">Movie News</a></li>
+    <li><a href="../about.html">About</a></li>
+    <li><a href="../contact.html">Contact</a></li>
 
-          <!--Responsive Navigation Section-->
-          <ul class ="topnav">
-             <li><a href="index.html">Home</a></li>
+    <div class="search-container">
+      <input type="text" class="search-input" placeholder="Search...">
+      <button class="search-icon">🔍</button>
+    </div>
+  </ul>
+</nav>
 
-             <!-- Dropdown: Movie Reviews -->
-              <li class="dropdown reviews-menu">
-                <a href="reviews.html">Movie Reviews</a>
-              </li>
-
-             <li><a href="genre.html">Film Genres</a></li>
-             <li><a href="top20.html">Arya's Top 20</a></li>
-
-             <!-- Dropdown: Best and Worst -->
-             <li class="dropdown bestworst-menu">
-                <a href="#">Best and Worst</a>
-                  <div class="dropdown-content">
-                    <a href="monthlybestworst.html">Monthly</a>
-                    <a href="yearlybestworst.html">Yearly</a>
-                 </div>
-             </li>
-
-               <!-- Dropdown: Lists and Guides -->
-              <li class="dropdown lists-menu">
-                <a href="#">Lists and Guides</a>
-                  <div class="dropdown-content">
-                    <a href="filmseries.html">Film Series</a>
-                    <a href="genrespotlight.html">Genre Spotlights</a>
-                    <a href="streamingrecs.html">Streaming Recs</a>
-                 </div>
-             </li>
-
-             <li><a href="news.html">Movie News</a></li>
-             <li><a href="about.html">About</a></li>
-             <li><a href="contact.html">Contact</a></li>
-
-          <div class="search-container">
-            <input type="text" class="search-input"placeholder="Search...">
-            <button class="search-icon">🔍</button>
-          </div>
-        </ul>
- </nav>
-
+<!-- Main content -->
 <main>
-  <button id="admin-toggle" class="admin-btn">Admin Mode</button>
-  <button id="add-block" style="display:none;">Add Content</button>
-  <button onclick="topFunction()" id="myBtn" title="Go to top">⇧</button>
+  <div class="admin-controls-wrapper">
+    <button id="admin-toggle" class="admin-btn">Admin Mode</button>
+    <button id="add-block" style="display:none;">Add Content</button>
+  </div>
 
   <section id="tag-content" class="tag-content"></section>
+
+  <!-- Back to top button -->
+  <button onclick="topFunction()" id="myBtn" title="Go to top">⇧</button>
 </main>
 
-<script>
-//DOM references
-const params = new URLSearchParams(window.location.search);
-const tag = params.get("tag");
+<!-- Footer -->
+<footer>
+  <p>&copy; 2025 Arya's Movie Musings</p>
+</footer>
 
+<script>
+/*DOM References*/
+const params = new URLSearchParams(window.location.search);
+const tag = params.get("tag") || "Tag";
 const title = document.getElementById("tag-title");
 const contentSection = document.getElementById("tag-content");
 const adminToggle = document.getElementById("admin-toggle");
 const addBtn = document.getElementById("add-block");
+title.textContent = tag;
 
 let adminMode = false;
-
-//Load tag content
 let tagPages = JSON.parse(localStorage.getItem("tagPages")) || {};
 
-title.textContent = tag || "Tag";
-
+/*Render Tag Page*/
 function renderTagPage() {
   contentSection.innerHTML = "";
-
   const blocks = tagPages[tag] || [];
 
-  if (!blocks.length && !adminMode) {
-    // BLANK PAGE (your requirement)
-    return;
-  }
+  if (!blocks.length && !adminMode) return;
 
   blocks.forEach((block, index) => {
     const div = document.createElement("div");
     div.className = "tag-block";
     div.innerHTML = `
       <p>${block}</p>
-      ${
-        adminMode
-          ? `<button onclick="deleteBlock(${index})">Delete</button>`
-          : ""
-      }
+      ${adminMode ? `<button onclick="deleteBlock(${index})">Delete</button>` : ""}
     `;
     contentSection.appendChild(div);
   });
 }
 
-//Admin mode
+/*Admin Mode*/
 adminToggle.addEventListener("click", () => {
   adminMode = !adminMode;
   addBtn.style.display = adminMode ? "block" : "none";
@@ -117,27 +131,6 @@ adminToggle.addEventListener("click", () => {
   renderTagPage();
 });
 
-//Get the back to top button
-let mybutton = document.getElementById("myBtn");
-
-//When the user scrolls down 20px from the top of the document, show the button
-window.onscroll = function() {scrollFunction()};
-
-function scrollFunction() {
-  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-    mybutton.style.display = "block";
-  } else {
-    mybutton.style.display = "none";
-  }
-}
-
-// When the user clicks on the button, scroll to the top of the document
-function topFunction() {
-  document.body.scrollTop = 0;
-  document.documentElement.scrollTop = 0;
-}
-
-//Add content
 addBtn.addEventListener("click", () => {
   const text = prompt("Add content for this tag:");
   if (!text) return;
@@ -155,43 +148,45 @@ function deleteBlock(index) {
   renderTagPage();
 }
 
-  //Page Transitions
-  function navigateWithLoader(url) {
-    if (!loader) {
-      window.location.href = url;
-      return;
-    }
+/*Back to top button*/
+let mybutton = document.getElementById("myBtn");
+window.onscroll = function() {
+  mybutton.style.display = (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) ? "block" : "none";
+};
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
 
-    loader.style.display = "flex";
-    loader.classList.remove("fade-out");
-
-    setTimeout(() => {
-      window.location.href = url;
-    }, 600);
+/*Search bar toggle */
+const searchIcon = document.querySelector('.search-icon');
+const searchInput = document.querySelector('.search-input');
+searchIcon.addEventListener('click', () => {
+  searchInput.classList.toggle('expanded');
+  if (searchInput.classList.contains('expanded')) searchInput.focus();
+});
+document.addEventListener('click', (e) => {
+  if (!searchIcon.contains(e.target) && !searchInput.contains(e.target)) {
+    searchInput.classList.remove('expanded');
   }
+});
 
-  //Intercept all internal links 
-  document.querySelectorAll("a[href]").forEach(link => {
-    const href = link.getAttribute("href");
-
-    if (
-      !href ||
-      href.startsWith("#") ||
-      href.startsWith("http") ||
-      href.startsWith("mailto") ||
-      href.startsWith("tel")
-    ) return;
-
-    link.addEventListener("click", e => {
-      e.preventDefault();
-      navigateWithLoader(href);
-    });
-  });
-//Initial render
-renderTagPage();   
+/*Loader */
+const loader = document.querySelector(".loader");
+window.addEventListener("load", () => {
+  if (!loader) return;
+  loader.classList.add("fade-out");
+  loader.addEventListener("transitionend", () => {
+    loader.style.display = "none";
+    loader.setAttribute("aria-hidden", "true");
+  }, { once: true });
+});
+/*Initial render */
+renderTagPage();
 </script>
 </body>
 </html>
+
 
 
 

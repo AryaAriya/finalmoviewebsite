@@ -96,6 +96,9 @@ const searchInput = document.querySelector('.search-input');
 
 const clearFiltersBtn = document.getElementById("clear-filters");
 
+const API_KEY = "00a29afc630db931314c32f156543971";
+const IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
+
 function getAllGenres() {
    const genres = new Set();
     myReviews.forEach(review => review.tags.forEach(tag => genres.add(tag)));
@@ -140,20 +143,34 @@ function renderStars(rating) {
     return stars;
 }
 
+async function fetchMovie(id) {
+  const res = await fetch(
+    `https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}`
+  );
+  return res.json();
+}
+    
 // Render review card
-function renderReviewCard(review) {
-    const article = document.createElement("article");
-    article.className = "review-card";
+async function renderReviewCard(review) {
+  const movie = await fetchMovie(review.id);
 
-    article.innerHTML = `
-        <img src="https://image.tmdb.org/t/p/w500${review.poster}">
-        <h3>${review.title}</h3>
-        <div class="star-rating">${renderStars(review.myRating || 0)}</div>
-        <div class="tags">${review.tags.map(t => `<span class="tag">${t}</span>`).join("")}</div>
-        <p>${review.review || ""}</p>
-        <a href="review-detail.html?id=${review.id}" class="read-full-btn"> Read Full Review </a>
-    `;
-    reviewsSection.appendChild(article);
+  const article = document.createElement("article");
+  article.className = "review-card";
+
+  article.innerHTML = `
+    <img 
+      src="${movie.poster_path ? IMAGE_BASE + movie.poster_path : 'Images/placeholder.jpg'}"
+      alt="${movie.title}">
+      <h3>${movie.title}</h3>
+      <div class="star-rating">${renderStars(review.myRating)}</div>
+      <div class="tags">${review.tags.map(t => `<span class="tag">${t}</span>`).join("")}</div>
+      <p>${review.review.slice(0, 120)}…</p>
+      <a href="review-detail.html?id=${review.id}" class="read-full-btn">
+      Read Full Review
+    </a>
+  `;
+
+  reviewsSection.appendChild(article);
 }
 
 // Render reviews filtered by a tag
@@ -211,7 +228,7 @@ clearFiltersBtn.addEventListener("click", () => {
   myReviews.forEach(renderReviewCard);
 });    
 
-function renderReviewsBySelectedGenres() {
+async function renderReviewsBySelectedGenres() {
   reviewsSection.innerHTML = "";
 
   if (selectedGenres.size === 0) {
@@ -237,3 +254,4 @@ function renderReviewsBySelectedGenres() {
 </script>
 </body>
 </html>
+

@@ -155,10 +155,43 @@ function deleteBlock(index) {
   renderTagPage();
 }
 
+  //Page Transitions
+  function navigateWithLoader(url) {
+    if (!loader) {
+      window.location.href = url;
+      return;
+    }
+
+    loader.style.display = "flex";
+    loader.classList.remove("fade-out");
+
+    setTimeout(() => {
+      window.location.href = url;
+    }, 600);
+  }
+
+  //Intercept all internal links 
+  document.querySelectorAll("a[href]").forEach(link => {
+    const href = link.getAttribute("href");
+
+    if (
+      !href ||
+      href.startsWith("#") ||
+      href.startsWith("http") ||
+      href.startsWith("mailto") ||
+      href.startsWith("tel")
+    ) return;
+
+    link.addEventListener("click", e => {
+      e.preventDefault();
+      navigateWithLoader(href);
+    });
+  });
 //Initial render
 renderTagPage();   
 </script>
 </body>
 </html>
+
 
 

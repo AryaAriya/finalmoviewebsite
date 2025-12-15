@@ -140,6 +140,7 @@ const API_KEY = "00a29afc630db931314c32f156543971"; // 🔑 replace with your TM
 const IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
 const reviewsSection = document.getElementById("reviews");
 const loadMoreBtn = document.getElementById("load-more");
+const loader = document.querySelector(".loader");  
 
 //Admin button
 let adminMode = false;
@@ -305,7 +306,7 @@ async function loadMyReviews() {
       navigateWithLoader(href);
     });
   });
-
+}
 //Admin toggle click event
 adminToggle.addEventListener("click", () => {
   adminMode = !adminMode;
@@ -326,8 +327,6 @@ addBtn.addEventListener("click", () => {
 
   myReviews.push({
     id: Number(id),
-    title: movie.title,
-    poster: movie.poster_path,
     myRating: Number(rating),
     tags: tags.split(",").map(t => t.trim()),
     review
@@ -363,6 +362,7 @@ loadMyReviews();
 </script>
 </body>
 </html>
+
 
 
 

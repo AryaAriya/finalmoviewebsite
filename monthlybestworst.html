@@ -105,9 +105,10 @@
 
 <!-- Main Content -->
 <main>
-  <!--Movie Reviews-->
+  <!--Tags-->
      <a href="tags/tag.html?tag=December 2025" class="tag">December 2025</a>
      <a href="tags/tag.html?tag=November 2025" class="tag">November 2025</a>
+     <button onclick="topFunction()" id="myBtn" title="Go to top">⇧</button>
 </main>
 <!-- Footer -->
 <footer>
@@ -141,8 +142,29 @@ window.addEventListener("load", () => {
     loader.setAttribute("aria-hidden", "true");
   }, { once: true });
 });
+
+//Get the back to top button
+let mybutton = document.getElementById("myBtn");
+
+//When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
 </script>
 </body>
 </html>
+
 
 

@@ -76,15 +76,16 @@
  <button id="clear-filters" class="clear-filters-btn" style="display:none;"> Clear Filters </button>
  <h1 id="genre-title"></h1>
  <section id="reviews" class="reviews"></section>
+ <button onclick="topFunction()" id="myBtn" title="Go to top">⇧</button>
 </main> 
 
-  <!-- Footer -->
+<!-- Footer -->
 <footer>
   <p>&copy; 2025 Arya's Movie Musings</p>
 </footer>
 
 <script>
-// Search bar animation
+//DOM references
 const myReviews = JSON.parse(localStorage.getItem("myReviews")) || [];
 const genreList = document.getElementById("genre-list");
 const reviewsSection = document.getElementById("reviews");
@@ -99,12 +100,14 @@ const clearFiltersBtn = document.getElementById("clear-filters");
 const API_KEY = "00a29afc630db931314c32f156543971";
 const IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
 
+//Get all genres
 function getAllGenres() {
    const genres = new Set();
     myReviews.forEach(review => review.tags.forEach(tag => genres.add(tag)));
     return [...genres].sort();
 }
 
+//Render all the genres
 function renderGenres() {
   const genres = getAllGenres();
 
@@ -115,6 +118,7 @@ function renderGenres() {
   ).join("");
 }
 
+//Search animation
 searchIcon.addEventListener('click', () => {
     searchInput.classList.toggle('expanded');
     if (searchInput.classList.contains('expanded')) {
@@ -134,7 +138,7 @@ window.addEventListener("storage", event => {
   }
 });
     
-// Render stars for rating
+//Render stars for rating
 function renderStars(rating) {
     let stars = "";
     for (let i = 1; i <= 5; i++) {
@@ -143,6 +147,7 @@ function renderStars(rating) {
     return stars;
 }
 
+//Fetch movie data
 async function fetchMovie(id) {
   const res = await fetch(
     `https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}`
@@ -150,7 +155,7 @@ async function fetchMovie(id) {
   return res.json();
 }
     
-// Render review card
+//Render review card
 async function renderReviewCard(review) {
   const movie = await fetchMovie(review.id);
 
@@ -173,7 +178,7 @@ async function renderReviewCard(review) {
   reviewsSection.appendChild(article);
 }
 
-// Render reviews filtered by a tag
+//Render reviews filtered by a tag
 function renderReviewsByTag(tag) {
     reviewsSection.innerHTML = "";
     if (tag === "ALL") {
@@ -216,7 +221,7 @@ function renderReviewsByTag(tag) {
 clearFiltersBtn.addEventListener("click", () => {
   selectedGenres.clear();
 
-  // Remove active state from all tags
+  //Remove active state from all tags
   document.querySelectorAll(".genre-tag.active").forEach(tag => {
     tag.classList.remove("active");
   });
@@ -250,8 +255,29 @@ async function renderReviewsBySelectedGenres() {
   }
 
   filtered.forEach(renderReviewCard);
-}    
+}   
+
+//Get the back to top button
+let mybutton = document.getElementById("myBtn");
+
+//When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
 </script>
 </body>
 </html>
+
 

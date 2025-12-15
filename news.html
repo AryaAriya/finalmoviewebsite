@@ -215,47 +215,45 @@ function topFunction() {
   document.documentElement.scrollTop = 0;
 }
 
-const loader = document.querySelector(".loader");
+  //Page Transitions
+  function navigateWithLoader(url) {
+    if (!loader) {
+      window.location.href = url;
+      return;
+    }
 
-// Hide loader on page load
-window.addEventListener("load", () => {
-  if (!loader) return;
+    loader.style.display = "flex";
+    loader.classList.remove("fade-out");
 
-  loader.classList.add("fade-out");
-  setTimeout(() => {
-    loader.style.display = "none";
-    loader.setAttribute("aria-hidden", "true");
-  }, 700);
-});
-
-// Navigation with loader
-function navigateWithLoader(url) {
-  if (!loader) {
-    window.location.href = url;
-    return;
+    setTimeout(() => {
+      window.location.href = url;
+    }, 600);
   }
 
-  loader.style.display = "flex";
-  loader.classList.remove("fade-out");
+  //Intercept all internal links 
+  document.querySelectorAll("a[href]").forEach(link => {
+    const href = link.getAttribute("href");
 
-  setTimeout(() => {
-    window.location.href = url;
-  }, 600);
-}
+    if (
+      !href ||
+      href.startsWith("#") ||
+      href.startsWith("http") ||
+      href.startsWith("mailto") ||
+      href.startsWith("tel")
+    ) return;
 
-// Intercept only transition links
-document.querySelectorAll("a.transition-link").forEach(link => {
-  link.addEventListener("click", e => {
-    e.preventDefault();
-    navigateWithLoader(link.getAttribute("href"));
+    link.addEventListener("click", e => {
+      e.preventDefault();
+      navigateWithLoader(href);
+    });
   });
-});
 
 //Initial render
 renderCards();
 </script>
 </body>
 </html>
+
 
 
 

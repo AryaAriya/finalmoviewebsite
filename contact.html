@@ -6,7 +6,60 @@
 <title> Arya's Movie Musings</title>
 <link rel="stylesheet" href="style.css">
 </head>
+<style>
+  .loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #111;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 1;
+  transition: opacity 0.6s ease;
+}
+
+.loader.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+</style>
 <body>
+  <div class="loader">
+  <div class="ticket-wrap">
+    <div class="ticket-left">
+      <h1>STARTUP <span> Cinema</span></h1>
+      <div class="ticket-title">
+        <h2>STAR WARS</h2>
+        <span>Movie</span>
+      </div>
+      <div class="ticket-name">
+        <h2>A.A.</h2>
+        <span>Name</span>
+      </div>
+      <div class="ticket-seat">
+        <h2>156</h2>
+        <span>Seat</span>   
+      </div>
+      <div class="ticket-time">
+        <h2>9:45</h2>
+        <span>Time</span>
+      </div>
+
+  </div>
+  <div class="ticket-right">
+     <div class="eye"></div>
+     <div class="number">
+      <h3>156</h3> 
+      <span>seat</span>
+    </div>
+    <div class="barcode"></div>
+  </div>
+ </div>
+</div>
     <!--Header Section-->
     <header class="banner">
         <!--Banner-->
@@ -99,6 +152,7 @@
 // Search bar animation
 const searchIcon = document.querySelector('.search-icon');
 const searchInput = document.querySelector('.search-input');
+const loader = document.querySelector(".loader");
 
 searchIcon.addEventListener('click', () => {
     searchInput.classList.toggle('expanded');
@@ -133,21 +187,7 @@ function topFunction() {
   document.documentElement.scrollTop = 0;
 }
 
-(function () {
-  const loader = document.querySelector(".loader");
-
-  // --- HIDE loader when page finishes loading ---
-  window.addEventListener("load", () => {
-    if (!loader) return;
-
-    loader.classList.add("fade-out");
-
-    setTimeout(() => {
-      loader.style.display = "none";
-    }, 800); // must match CSS transition
-  });
-
-  // --- PAGE TRANSITIONS ---
+  //Page Transitions
   function navigateWithLoader(url) {
     if (!loader) {
       window.location.href = url;
@@ -162,7 +202,7 @@ function topFunction() {
     }, 600);
   }
 
-  // --- Intercept all internal links ---
+  //Intercept all internal links 
   document.querySelectorAll("a[href]").forEach(link => {
     const href = link.getAttribute("href");
 
@@ -179,9 +219,17 @@ function topFunction() {
       navigateWithLoader(href);
     });
   });
-})();
+
+window.addEventListener("load", () => {
+  if (!loader) return;
+  loader.classList.add("fade-out");
+  setTimeout(() => {
+    loader.style.display = "none";
+  }, 600);
+});
 </script>
 </body>
 </html>
+
 
 

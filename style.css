@@ -750,7 +750,8 @@ ul.center-ul {
   }
 
   .logo-one {
-    font-size: 1em;        
+    font-size: 1em;  
+    margin-left: 5px;
  }
 
  .banner {
@@ -1213,6 +1214,7 @@ footer {
 footer p {
   margin: 0;
 }
+
 
 
 

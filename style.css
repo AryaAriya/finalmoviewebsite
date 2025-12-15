@@ -465,6 +465,14 @@ ul.topnav li.right {
     position: static;
     width: 100%;
   }
+
+   .content-box {
+    flex-direction: column;
+  }
+
+   .form-box {
+    flex-direction: column;
+  }
 }
 /*Basic mobile breakpoint*/
 @media screen and (max-width: 600px) {
@@ -541,8 +549,9 @@ ul.topnav li.right {
   /*Content box in body*/
 .content-box{
   display: flex;
-  flex-direction: column;
-  width: 80%;          
+  flex-direction: wrap;
+  width: 80%; 
+  gap: 20px
   max-width: 800px;    
   margin: 2rem auto;   
   padding: 2rem;
@@ -583,8 +592,15 @@ ul.center-ul {
   margin-left: 2rem;
 }
 
+.content-box > div {
+  flex: 1 1 300px; /* grow/shrink, min width 300px */
+}
+
 /*Form container*/
 .form-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px
   width: 100%;          
   max-width: 800px;
   margin: 0 auto;
@@ -638,7 +654,7 @@ ul.center-ul {
   line-height: 1;
 }
 
-/*Hover effect for from submit button */
+/*Hover effect for submit button */
 .form-box input[type="submit"]:hover {
   background: #ffa500;
   color: #FFFFFF;
@@ -652,11 +668,9 @@ ul.center-ul {
   resize: vertical;   
 }
 
-  .learn-more {
-    display: inline-block;
-    padding: 0.4rem 0.8rem;
-    font-size: 0.9rem;
-  }
+.form-box > div {
+  flex: 1 1 300px; /* grow/shrink, min width 300px */
+} 
 
   footer {
     flex-direction: column;
@@ -1201,13 +1215,3 @@ footer {
 footer p {
   margin: 0;
 }
-
-
-
-
-
-
-
-
-
-

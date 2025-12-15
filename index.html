@@ -108,25 +108,22 @@
 <main>
   <!--Movie Reviews-->
    <section id="home-reviews" class="reviews"></section>
-   <button onclick="topFunction()" id="myBtn" title="Go to top">
+   <button onclick="topFunction()" id="myBtn" title="Go to top">⇧</button>
 </main>
 <!-- Footer -->
 <footer>
   <p>&copy; 2025 Arya's Movie Musings</p>
 </footer>
 <script>  
-// --------------------
-// DOM References
-// --------------------
+
+//DOM references
 const searchIcon = document.querySelector('.search-icon');
 const searchInput = document.querySelector('.search-input');
 const reviewsSection = document.getElementById("home-reviews");
 const loader = document.querySelector(".loader");
 const body = document.body;
 
-// --------------------
-// SEARCH BAR TOGGLE
-// --------------------
+//Search bar toggle
 searchIcon.addEventListener('click', () => {
     searchInput.classList.toggle('expanded');
     if (searchInput.classList.contains('expanded')) searchInput.focus();
@@ -137,18 +134,16 @@ document.addEventListener('click', (event) => {
         searchInput.classList.remove('expanded');
     }
 });
+//More DOM references
 const API_KEY = "00a29afc630db931314c32f156543971";
 const IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
-// --------------------
-// LOAD REVIEWS
-// --------------------
+
+//Load reviews from reviews page
 function getMyReviews() {
     return JSON.parse(localStorage.getItem("myReviews")) || [];
 }
 
-// --------------------
-// RENDER HELPERS
-// --------------------
+//Render stars
 function renderStars(rating = 0) {
     let stars = "";
     for (let i = 1; i <= 5; i++) {
@@ -157,6 +152,7 @@ function renderStars(rating = 0) {
     return stars;
 }
 
+//Fetch movie data
 async function fetchMovie(id) {
   const res = await fetch(
     `https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}`
@@ -164,6 +160,7 @@ async function fetchMovie(id) {
   return res.json();
 }
 
+//Render review cards dynamically
 async function renderReviewCard(review) {
   const movie = await fetchMovie(review.id);
 
@@ -198,9 +195,7 @@ async function renderReviewCard(review) {
   reviewsSection.appendChild(article);
 }
 
-// --------------------
-// RENDER HOME REVIEWS
-// --------------------
+//Render home reviews
 async function renderHomeReviews() {
   reviewsSection.innerHTML = "";
   const reviews = getMyReviews();
@@ -210,19 +205,17 @@ async function renderHomeReviews() {
   }
 }
 
-// --------------------
-// SYNC ACROSS PAGES
-// --------------------
+//Sync across pages
 window.addEventListener("storage", (e) => {
     if (e.key === "myReviews") {
         renderHomeReviews();
     }
 });
 
-// Get the button
+//Get the back to top button
 let mybutton = document.getElementById("myBtn");
 
-// When the user scrolls down 20px from the top of the document, show the button
+//When the user scrolls down 20px from the top of the document, show the button
 window.onscroll = function() {scrollFunction()};
 
 function scrollFunction() {
@@ -239,9 +232,7 @@ function topFunction() {
   document.documentElement.scrollTop = 0;
 }
   
-// --------------------
-// LOADER
-// --------------------
+//Loader
 function hideLoader() {
     if (!loader) return;
     body.classList.add("loaded");
@@ -256,9 +247,7 @@ window.addEventListener("load", () => {
     setTimeout(hideLoader, 2000);
 });
 
-// --------------------
-// PAGE TRANSITIONS
-// --------------------
+//Page transitions
 function triggerPageTransition(targetUrl) {
     body.classList.remove("loaded");
     if (loader) loader.style.display = "flex";
@@ -279,9 +268,7 @@ document.querySelectorAll(".transition-link").forEach(link => {
     });
 });
 
-// --------------------
-// INITIALIZE
-// --------------------
+//Initialize loader
 document.addEventListener("DOMContentLoaded", () => {
     renderHomeReviews();
     hideLoader();
@@ -289,6 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 </body>
 </html>
+
 
 
 

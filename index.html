@@ -46,12 +46,7 @@
     <header class="banner">
         <!--Banner-->
         <div class="logo-one">
-           <h2>
-            Arya's
-            <span>Arya's</span>
-            <span>Arya's</span>
-            <span>Movie Musings</span>
-          </h2>
+           <h2> Arya's Movie Musings</h2>
         </div>
     </header>
     
@@ -112,7 +107,7 @@
 </main>
 <!-- Footer -->
 <footer>
-  <p>&copy; 2025 Arya's Movie Musings</p>
+  <p>&copy; 2025 Arya's Movie Musings         Images from The Movie Database</p>
 </footer>
 <script>  
 
@@ -232,33 +227,35 @@ function topFunction() {
   document.documentElement.scrollTop = 0;
 }
   
-//Loader
+//Hide loader
 function hideLoader() {
-    if (!loader) return;
-    body.classList.add("loaded");
-    loader.classList.add("fade-out");
-    loader.addEventListener("transitionend", () => {
-        loader.style.display = "none";
-    }, { once: true });
+  if (!loader) return;
+
+  loader.classList.add("fade-out");
+
+  setTimeout(() => {
+    loader.style.display = "none";
+    document.body.classList.add("loaded");
+  }, 800); // must match CSS transition time
 }
 
-// Hide loader when page is fully loaded
 window.addEventListener("load", () => {
-    setTimeout(hideLoader, 2000);
+  hideLoader();
 });
 
 //Page transitions
-function triggerPageTransition(targetUrl) {
-    body.classList.remove("loaded");
-    if (loader) loader.style.display = "flex";
-    loader?.classList.remove("fade-out");
+function triggerPageTransition(url) {
+  if (!loader) {
+    window.location.href = url;
+    return;
+  }
 
-    setTimeout(() => {
-        loader?.classList.add("fade-out");
-        loader?.addEventListener("transitionend", () => {
-            window.location.href = targetUrl;
-        }, { once: true });
-    }, 2000);
+  loader.style.display = "flex";
+  loader.classList.remove("fade-out");
+
+  setTimeout(() => {
+    window.location.href = url;
+  }, 600);
 }
 
 document.querySelectorAll(".transition-link").forEach(link => {
@@ -271,11 +268,11 @@ document.querySelectorAll(".transition-link").forEach(link => {
 //Initialize loader
 document.addEventListener("DOMContentLoaded", () => {
     renderHomeReviews();
-    hideLoader();
 });
 </script>
 </body>
 </html>
+
 
 
 

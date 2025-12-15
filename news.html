@@ -17,7 +17,39 @@
             Musings
           </h3>
         </div>
-       <button id="admin-toggle" class="admin-btn">Admin Mode</button>
+        <div class="loader">
+  <div class="ticket-wrap">
+    <div class="ticket-left">
+      <h1>STARTUP <span> Cinema</span></h1>
+      <div class="ticket-title">
+        <h2>STAR WARS</h2>
+        <span>Movie</span>
+      </div>
+      <div class="ticket-name">
+        <h2>A.A.</h2>
+        <span>Name</span>
+      </div>
+      <div class="ticket-seat">
+        <h2>156</h2>
+        <span>Seat</span>   
+      </div>
+      <div class="ticket-time">
+        <h2>9:45</h2>
+        <span>Time</span>
+      </div>
+
+  </div>
+  <div class="ticket-right">
+     <div class="eye"></div>
+     <div class="number">
+      <h3>156</h3> 
+      <span>seat</span>
+    </div>
+    <div class="barcode"></div>
+  </div>
+ </div>
+</div>
+ <button id="admin-toggle" class="admin-btn">Admin Mode</button>
     </header>
     
     <nav class="navbar">
@@ -29,22 +61,22 @@
 
           <!--Responsive Navigation Section-->
           <ul class ="topnav">
-             <li><a href="index.html">Home</a></li>
+             <li><a href="index.html" class="transition-link">Home</a></li>
 
              <!-- Dropdown: Movie Reviews -->
               <li class="dropdown reviews-menu">
                 <a href="#">Movie Reviews</a>
               </li>
 
-             <li><a href="genre.html">Film Genres</a></li>
-             <li><a href="top20.html">Arya's Top 20</a></li>
+             <li><a href="genre.html" class="transition-link">Film Genres</a></li>
+             <li><a href="top20.html" class="transition-link">Arya's Top 20</a></li>
 
              <!-- Dropdown: Best and Worst -->
              <li class="dropdown bestworst-menu">
                 <a href="#">Best and Worst</a>
                   <div class="dropdown-content">
-                    <a href="monthlybestworst.html">Monthly</a>
-                    <a href="yearlybestworst.html">Yearly</a>
+                    <a href="monthlybestworst.html" class="transition-link">Monthly</a>
+                    <a href="yearlybestworst.html" class="transition-link">Yearly</a>
                  </div>
              </li>
 
@@ -52,15 +84,15 @@
               <li class="dropdown lists-menu">
                 <a href="#">Lists and Guides</a>
                   <div class="dropdown-content">
-                    <a href="filmseries.html">Film Series</a>
-                    <a href="genrespotlight.html">Genre Spotlights</a>
-                    <a href="streamingrecs.html">Streaming Recs</a>
+                    <a href="filmseries.html" class="transition-link">Film Series</a>
+                    <a href="genrespotlight.html" class="transition-link">Genre Spotlights</a>
+                    <a href="streamingrecs.html" class="transition-link">Streaming Recs</a>
                  </div>
              </li>
 
-             <li><a href="news.html">Movie News</a></li>
-             <li><a href="about.html">About</a></li>
-             <li><a href="contact.html">Contact</a></li>
+             <li><a href="news.html" class="transition-link">Movie News</a></li>
+             <li><a href="about.html" class="transition-link">About</a></li>
+             <li><a href="contact.html" class="transition-link">Contact</a></li>
 
           <div class="search-container">
             <input type="text" class="search-input"placeholder="Search...">
@@ -84,6 +116,7 @@
 //Search bar animation
 const searchIcon = document.querySelector('.search-icon');
 const searchInput = document.querySelector('.search-input');
+const loader = document.querySelector(".loader");
 
 searchIcon.addEventListener('click', () => {
     searchInput.classList.toggle('expanded');
@@ -216,38 +249,22 @@ function topFunction() {
   document.documentElement.scrollTop = 0;
 } 
 
-  //Page Transitions
-  function navigateWithLoader(url) {
-    if (!loader) {
-      window.location.href = url;
-      return;
-    }
+window.addEventListener("load", () => {
+  if (!loader) return;
 
-    loader.style.display = "flex";
-    loader.classList.remove("fade-out");
+  loader.classList.add("fade-out");
+  setTimeout(() => {
+    loader.style.display = "none";
+  }, 600);
+});
 
-    setTimeout(() => {
-      window.location.href = url;
-    }, 600);
-  }
-
-  //Intercept all internal links 
-  document.querySelectorAll("a[href]").forEach(link => {
-    const href = link.getAttribute("href");
-
-    if (
-      !href ||
-      href.startsWith("#") ||
-      href.startsWith("http") ||
-      href.startsWith("mailto") ||
-      href.startsWith("tel")
-    ) return;
-
-    link.addEventListener("click", e => {
-      e.preventDefault();
-      navigateWithLoader(href);
-    });
+document.querySelectorAll("a.transition-link").forEach(link => {
+  link.addEventListener("click", e => {
+    e.preventDefault();
+    navigateWithLoader(link.getAttribute("href"));
   });
+});
+
 // Initial render
 renderCards();
 </script>

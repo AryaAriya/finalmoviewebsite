@@ -538,11 +538,6 @@ ul.topnav li.right {
     transition: opacity 0.8s ease;
   }
 
-  /* Visible state */
-  body.loaded {
-    opacity: 1;
-  }
-
   /*Content box in body*/
 .content-box{
   display: flex;
@@ -1206,6 +1201,7 @@ footer {
 footer p {
   margin: 0;
 }
+
 
 
 

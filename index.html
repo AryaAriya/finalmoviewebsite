@@ -160,10 +160,10 @@ function renderReviewCard(review) {
     article.className = "review-card";
 
     article.innerHTML = `
-        <img class="review-poster" 
-             src="${review.poster || 'Images/default-poster.jpg'}" 
-             alt="${review.title || 'Untitled Movie'} Poster">
+        <img src="https://image.tmdb.org/t/p/w500${review.poster}">
 
+        <h3>${review.title}</h3>
+        
         <h3>${review.title || "Untitled Movie"}</h3>
 
         <div class="star-rating">
@@ -262,6 +262,7 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 </body>
 </html>
+
 
 
 

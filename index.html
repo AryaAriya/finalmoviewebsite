@@ -136,7 +136,8 @@ document.addEventListener('click', (event) => {
         searchInput.classList.remove('expanded');
     }
 });
-
+const API_KEY = "00a29afc630db931314c32f156543971";
+const IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
 // --------------------
 // LOAD REVIEWS
 // --------------------
@@ -155,52 +156,51 @@ function renderStars(rating = 0) {
     return stars;
 }
 
-function renderReviewCard(review) {
-    const article = document.createElement("article");
-    article.className = "review-card";
+async function fetchMovie(id) {
+  const res = await fetch(
+    `https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}`
+  );
+  return res.json();
+}
 
-    article.innerHTML = `
-        <img src="https://image.tmdb.org/t/p/w500${review.poster}">
+async function renderReviewCard(review) {
+  const movie = await fetchMovie(review.id);
 
-        <h3>${review.title}</h3>
-        
-        <h3>${review.title || "Untitled Movie"}</h3>
+  const article = document.createElement("article");
+  article.className = "review-card";
 
-        <div class="star-rating">
-            ${renderStars(review.myRating)}
-        </div>
+  article.innerHTML = `
+    <img 
+      src="${movie.poster_path ? IMAGE_BASE + movie.poster_path : 'Images/placeholder.jpg'}"
+      alt="${movie.title}"
+    >
 
-        <div class="tags">
-            ${review.tags.map(tag => 
-                `<a href="tags/tag.html?tag=${encodeURIComponent(tag)}" class="tag">${tag}</a>`
-            ).join("")}
-        </div>
+    <h3>${movie.title}</h3>
 
-        <p class="review-snippet">
-            ${(review.review || "").slice(0, 140)}…
-        </p>
+    <div class="star-rating">
+      ${renderStars(review.myRating)}
+    </div>
 
-        <a href="review-detail.html?id=${review.id}" class="read-full-btn">Read Full Review</a>
-    `;
+    <p>${review.review.slice(0, 120)}…</p>
 
-    reviewsSection.appendChild(article);
+    <a href="review-detail.html?id=${review.id}" class="read-full-btn">
+      Read Full Review
+    </a>
+  `;
+
+  reviewsSection.appendChild(article);
 }
 
 // --------------------
 // RENDER HOME REVIEWS
 // --------------------
-function renderHomeReviews() {
-    reviewsSection.innerHTML = "";
+async function renderHomeReviews() {
+  reviewsSection.innerHTML = "";
+  const reviews = getMyReviews();
 
-    const reviews = getMyReviews();
-
-    if (!reviews.length) {
-        reviewsSection.innerHTML = "<p>No reviews yet.</p>";
-        return;
-    }
-
-    // Show latest 6 reviews
-    reviews.slice(0, 6).forEach(renderReviewCard);
+  for (const review of reviews.slice(0, 6)) {
+    await renderReviewCard(review);
+  }
 }
 
 // --------------------
@@ -262,6 +262,7 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 </body>
 </html>
+
 
 
 

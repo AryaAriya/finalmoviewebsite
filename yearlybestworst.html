@@ -106,9 +106,7 @@
 <!-- Main Content -->
 <main>
   <!--Movie Reviews-->
-     <button id="admin-toggle" class="admin-btn">Admin Mode</button>
-     <button id="add-review" style="display:none;">Add Review</button>
-     <a href="tag/tag.html?tag=2025" class="tag">2025</a>
+     <a href="tags/tag.html?tag=2025" class="tag">2025</a>
 </main>
 <!-- Footer -->
 <footer>
@@ -132,28 +130,20 @@ document.addEventListener('click', (event) => {
   }
 });
 
-// DOM references
-// Helper to save reviews to localStorage (optional, since you call saveReviews)
-function saveReviews() {
-  localStorage.setItem('myReviews', JSON.stringify(myReviews));
-}
-
-// Render tags
-function renderTags(tags) {
-  return tags.map(tag =>
-    `<a href="tag/tag.html?tag=${encodeURIComponent(tag)}" class="tag">${tag}</a>`
-  ).join("");
-}
-
-  // Hide the loader when done
+window.addEventListener("load", () => {
   const loader = document.querySelector(".loader");
-  if (loader) {
+  if (!loader) return;
+
+  loader.classList.add("fade-out");
+  loader.addEventListener("transitionend", () => {
     loader.style.display = "none";
     loader.setAttribute("aria-hidden", "true");
-  }
+  }, { once: true });
+});
 </script>
 </body>
 </html>
+
 
 
 

@@ -225,7 +225,12 @@ async function loadFullReview() {
         <p><strong>Director:</strong> ${director}</p>
         <p><strong>Cast:</strong> ${cast.join(", ")}</p>
 
-        <div class="tags">${renderTags(review.tags)}</div>
+       <div class="tags">
+           ${review.tags.map(tag => `
+          <a href="genre.html?tag=${encodeURIComponent(tag)}" class="tag">
+           ${tag}
+           </a>
+               `).join("")}
       </div>
 
       <!--RIGHT COLUMN-->
@@ -318,6 +323,7 @@ loadFullReview();
   </script>
 </body>
 </html>
+
 
 
 

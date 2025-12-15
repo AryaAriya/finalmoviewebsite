@@ -228,7 +228,11 @@ function renderReviewCard(movie, index) {
     </div>
 
     <div class="tags">
-      ${renderTags(movie.tags)}
+     ${review.tags.map(tag => `
+       <a href="genre.html?tag=${encodeURIComponent(tag)}" class="tag">
+        ${tag}
+      </a>
+      `).join("")}
     </div>
 
     <a href="review-detail.html?id=${movie.id}" class="read-full-btn">
@@ -349,6 +353,7 @@ loadMyReviews();
 </script>
 </body>
 </html>
+
 
 
 

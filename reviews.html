@@ -298,6 +298,8 @@ addBtn.addEventListener("click", () => {
 
   myReviews.push({
     id: Number(id),
+    title: movie.title,
+    poster: movie.poster_path,
     myRating: Number(rating),
     tags: tags.split(",").map(t => t.trim()),
     review
@@ -313,6 +315,7 @@ loadMyReviews();
 </script>
 </body>
 </html>
+
 
 
 

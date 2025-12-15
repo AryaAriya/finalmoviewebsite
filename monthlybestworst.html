@@ -162,41 +162,45 @@ function topFunction() {
   document.documentElement.scrollTop = 0;
 }
 
-  //Page Transitions
-  function navigateWithLoader(url) {
-    if (!loader) {
-      window.location.href = url;
-      return;
-    }
+const loader = document.querySelector(".loader");
 
-    loader.style.display = "flex";
-    loader.classList.remove("fade-out");
+// Hide loader on page load
+window.addEventListener("load", () => {
+  if (!loader) return;
 
-    setTimeout(() => {
-      window.location.href = url;
-    }, 600);
+  loader.classList.add("fade-out");
+  setTimeout(() => {
+    loader.style.display = "none";
+    loader.setAttribute("aria-hidden", "true");
+  }, 700);
+});
+
+// Navigation with loader
+function navigateWithLoader(url) {
+  if (!loader) {
+    window.location.href = url;
+    return;
   }
 
-  //Intercept all internal links 
-  document.querySelectorAll("a[href]").forEach(link => {
-    const href = link.getAttribute("href");
+  loader.style.display = "flex";
+  loader.classList.remove("fade-out");
 
-    if (
-      !href ||
-      href.startsWith("#") ||
-      href.startsWith("http") ||
-      href.startsWith("mailto") ||
-      href.startsWith("tel")
-    ) return;
+  setTimeout(() => {
+    window.location.href = url;
+  }, 600);
+}
 
-    link.addEventListener("click", e => {
-      e.preventDefault();
-      navigateWithLoader(href);
-    });
+// Intercept only transition links
+document.querySelectorAll("a.transition-link").forEach(link => {
+  link.addEventListener("click", e => {
+    e.preventDefault();
+    navigateWithLoader(link.getAttribute("href"));
   });
+});
 </script>
 </body>
 </html>
+
 
 
 

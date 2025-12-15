@@ -473,6 +473,10 @@ ul.topnav li.right {
 /*Basic mobile breakpoint*/
 @media screen and (max-width: 600px) {
 
+  .logo-one{
+   font-size: 0.5em; 
+  }
+
 .navbar {
     flex-direction: column;
     align-items: center;
@@ -679,6 +683,10 @@ ul.center-ul {
 /*Basic tablet breakpoint*/
 @media screen and (max-width: 1024px) {
 
+   .logo-one{
+   font-size: 0.7em; 
+  }
+
  .navbar {
     flex-direction: column;
     align-items: flex-start;
@@ -751,7 +759,7 @@ ul.center-ul {
 
   .logo-one {
     font-size: 1em;  
-    margin-left: 5px;
+    margin-left: 15px;
  }
 
  .banner {
@@ -866,6 +874,7 @@ main {
   width: 100%;
 }
 
+/*Admin button**/
 .admin-btn {
   position: fixed;
   bottom: 20px;
@@ -1214,6 +1223,7 @@ footer {
 footer p {
   margin: 0;
 }
+
 
 
 

@@ -73,6 +73,7 @@
  <!-- Main content -->
 <main>
 <section id="cards" class="reviews"></section>
+<button onclick="topFunction()" id="myBtn" title="Go to top">⇧</button>
  </main> 
 
   <!-- Footer -->
@@ -81,7 +82,7 @@
 </footer>
 
 <script>
-// Search bar animation
+//Search bar animation
 const searchIcon = document.querySelector('.search-icon');
 const searchInput = document.querySelector('.search-input');
 
@@ -104,12 +105,12 @@ const adminToggle = document.getElementById("admin-toggle");
 let adminMode = false;
 let cards = JSON.parse(localStorage.getItem("adminCards")) || [];
 
-// Save
+//Save cards
 function saveCards() {
   localStorage.setItem("adminCards", JSON.stringify(cards));
 }
 
-// Render blank admin card
+//Render blank admin card
 function renderBlankCard() {
   const article = document.createElement("article");
   article.className = "review-card admin-draft";
@@ -140,7 +141,7 @@ function renderBlankCard() {
   cardsSection.prepend(article);
 }
 
-// Render saved cards
+//Render saved cards
 function renderCards() {
   cardsSection.innerHTML = "";
 
@@ -168,7 +169,7 @@ function renderCards() {
   });
 }
 
-// Edit
+//Edit cards
 window.editCard = index => {
   const newTitle = prompt("Title:", cards[index].title || "");
   const newText = prompt("Text:", cards[index].text);
@@ -180,7 +181,7 @@ window.editCard = index => {
   renderCards();
 };
 
-// Delete
+//Delete cards
 window.deleteCard = index => {
   if (!confirm("Delete this card?")) return;
   cards.splice(index, 1);
@@ -188,16 +189,36 @@ window.deleteCard = index => {
   renderCards();
 };
 
-// Admin toggle
+//Admin toggle
 adminToggle.onclick = () => {
   adminMode = !adminMode;
   adminToggle.textContent = adminMode ? "Exit Admin Mode" : "Admin Mode";
   renderCards();
 };
 
-// Initial render
+//Get the back to top button
+let mybutton = document.getElementById("myBtn");
+
+//When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+//Initial render
 renderCards();
 </script>
 </body>
 </html>
+
 

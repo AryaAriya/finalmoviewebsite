@@ -210,28 +210,37 @@ function saveReviews() {
     : "Images/placeholder.jpg";
 
   reviewDetail.innerHTML = `
-    <article class="review-detail-card">
-      <figure>
+  <article class="review-detail-card">
+
+    <div class="review-top">
+      <!-- LEFT COLUMN -->
+      <div class="review-info">
+        <h2>${movie.title}</h2>
+
+        <div class="star-rating">${renderStars(review.myRating)}</div>
+
+        <p><strong>Runtime:</strong> ${movie.runtime} min</p>
+        <p><strong>Director:</strong> ${director}</p>
+        <p><strong>Cast:</strong> ${cast.join(", ")}</p>
+
+        <div class="tags">${renderTags(review.tags)}</div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <figure class="review-poster">
         <img src="${poster}" alt="${movie.title}">
       </figure>
+    </div>
 
-      <h2>${movie.title}</h2>
-
-      <p><strong>Runtime:</strong> ${movie.runtime} min</p>
-
-      <div class="star-rating">${renderStars(review.myRating)}</div>
-
-      <p><strong>Director:</strong> ${director}</p>
-      <p><strong>Cast:</strong> ${cast.join(", ")}</p>
-
-      <div class="tags">${renderTags(review.tags)}</div>
-
+    <!-- BOTTOM FULL REVIEW -->
+    <div class="review-body">
       <p class="full-review">${review.review}</p>
+    </div>
 
-      <a href="reviews.html" class="back-btn">← Back to Reviews</a>
-    </article>
-  `;
-}
+    <a href="reviews.html" class="back-btn">← Back to Reviews</a>
+
+  </article>
+`;
 
 adminToggle.addEventListener("click", () => {
   adminMode = !adminMode;
@@ -254,6 +263,7 @@ loadFullReview();
   </script>
 </body>
 </html>
+
 
 
 

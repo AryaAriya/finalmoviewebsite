@@ -380,7 +380,7 @@ footer{
   margin-left: 20px;
 
   /*Scaling */
-  font-size: clamp(0.5rem, 0.7vw, 1.5rem);
+  font-size: clamp(1rem, 2.5vw, 2rem);
 }
 
 /*logo styling */
@@ -1219,6 +1219,7 @@ footer {
 footer p {
   margin: 0;
 }
+
 
 
 

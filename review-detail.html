@@ -12,12 +12,11 @@
     <header class="banner">
         <!--Banner-->
         <div class="logo-one">
-          <h2>
+          <h3>
             Arya's
-            <span>Arya's</span>
-            <span>Arya's</span>
-            <span>Movie Musings</span>
-          </h2>
+            Movie
+            Musings
+          </h3>
         </div>
   </header>
 
@@ -229,13 +228,13 @@ async function loadFullReview() {
         <div class="tags">${renderTags(review.tags)}</div>
       </div>
 
-      <!-- RIGHT COLUMN -->
+      <!--RIGHT COLUMN-->
       <figure class="review-poster">
         <img src="${poster}" alt="${movie.title}">
       </figure>
     </div>
 
-    <!-- BOTTOM FULL REVIEW -->
+    <!--BOTTOM FULL REVIEW-->
     <div class="review-body">
       <p class="full-review">${review.review}</p>
     </div>
@@ -282,11 +281,45 @@ window.addEventListener("storage", e => {
   }
 });
 
+  //Page Transitions
+  function navigateWithLoader(url) {
+    if (!loader) {
+      window.location.href = url;
+      return;
+    }
+
+    loader.style.display = "flex";
+    loader.classList.remove("fade-out");
+
+    setTimeout(() => {
+      window.location.href = url;
+    }, 600);
+  }
+
+  //Intercept all internal links 
+  document.querySelectorAll("a[href]").forEach(link => {
+    const href = link.getAttribute("href");
+
+    if (
+      !href ||
+      href.startsWith("#") ||
+      href.startsWith("http") ||
+      href.startsWith("mailto") ||
+      href.startsWith("tel")
+    ) return;
+
+    link.addEventListener("click", e => {
+      e.preventDefault();
+      navigateWithLoader(href);
+    });
+  });
+})();
 //Start
 loadFullReview();
   </script>
 </body>
 </html>
+
 
 
 

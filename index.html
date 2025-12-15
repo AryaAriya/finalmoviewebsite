@@ -181,7 +181,10 @@ async function renderReviewCard(review) {
       ${renderStars(review.myRating)}
     </div>
 
-    <div class="tags">${review.tags.map(t => `<span class="tag">${t}</span>`).join("")}
+    <div class="tags">
+      ${review.tags.map(tag => 
+        `<a href="genre.html?tag=${encodeURIComponent(tag)}" class="tag">${tag}</a>`
+      ).join("")}
     </div>
 
     <p>${review.review.slice(0, 120)}…</p>
@@ -265,6 +268,7 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 </body>
 </html>
+
 
 
 

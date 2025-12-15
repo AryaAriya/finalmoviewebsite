@@ -977,7 +977,7 @@ main {
 }
 
 .review-card .read-full-btn:hover {
-  background-color: #7DF9FF;
+  background-color: #ffa500;
 }
 
 .admin-btn {
@@ -1103,7 +1103,6 @@ main {
   cursor: pointer;
   padding: 15px;
   border-radius: 4px;
-  position: relative;
   top: -20px;
 }
 
@@ -1215,4 +1214,5 @@ footer {
 footer p {
   margin: 0;
 }
+
 

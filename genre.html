@@ -146,7 +146,8 @@ function renderReviewCard(review) {
     article.className = "review-card";
 
     article.innerHTML = `
-        <h3>${review.title || "Untitled Movie"}</h3>
+        <img src="https://image.tmdb.org/t/p/w500${review.poster}">
+        <h3>${review.title}</h3>
         <div class="star-rating">${renderStars(review.myRating || 0)}</div>
         <div class="tags">${review.tags.map(t => `<span class="tag">${t}</span>`).join("")}</div>
         <p>${review.review || ""}</p>
@@ -236,7 +237,3 @@ function renderReviewsBySelectedGenres() {
 </script>
 </body>
 </html>
-
-
-
-

@@ -26,6 +26,112 @@
   opacity: 0;
   pointer-events: none;
 }
+
+/*Content box in body*/
+.content-box{
+  display: flex;
+  flex-direction: column;
+  width: 80%;          
+  max-width: 800px;    
+  margin: 2rem auto;   
+  padding: 2rem; 
+  background: #333;
+  border: 2px solid #ffa500;
+  color: #FFFFFF;
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/*Content box h1 text*/
+.content-box h1 {
+  color: #7df9ff;
+  text-align: center;
+  line-height: 1.9;
+}
+
+/*Content box h2 text*/
+.content-box h2 {
+  color: #7DF9FF;  
+  text-align: center;
+   line-height: 1.9;
+}
+
+/*Content box p text*/
+.content-box p {
+  color: #FFFFFF;
+  text-align: center;
+  align-items: center;
+  line-height: 1.5;
+}
+
+/*Form container*/
+.form-box {
+  width: 100%;          
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+/*Form container text input boxes*/
+.form-box input[type="text"],
+.form-box input[type="email"],
+.form-box textarea{
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  font-size: 14px;
+  transition: border-color 0.3 ease, box-shadow 0.3s ease;
+}
+
+/*Focus area for form input text boxes*/
+.form-box input[type="text"]:focus,
+.form-box input[type="email"]:focus,
+.form-box textarea:focus {
+  border-color: #ffa500; 
+  box-shadow: 0 0 5px rgba(215, 129, 0, 0.429);
+  outline: none;
+}
+
+/*Form submit button*/
+.form-box input[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  background: #7df9ff;
+  color: #333333;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/*Form text input label*/
+.form-box label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 6px;
+  color: #FFFFFF;
+  line-height: 1;
+}
+
+/*Hover effect for from submit button */
+.form-box input[type="submit"]:hover {
+  background: #ffa500;
+  color: #FFFFFF;
+}
+
+/*Form textarea*/
+.form-box textarea {
+  width: 100%;        
+  box-sizing: border-box; 
+  padding: 10px;
+  resize: vertical;   
+}
 </style>
 <body>
   <div class="loader">
@@ -230,6 +336,7 @@ window.addEventListener("load", () => {
 </script>
 </body>
 </html>
+
 
 
 

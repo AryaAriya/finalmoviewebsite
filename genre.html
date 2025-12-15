@@ -73,8 +73,9 @@
 <main>
  <h1>Explore Film Genres</h1>
  <section id="genre-list" class="genre-list"></section>
+ <button id="clear-filters" class="clear-filters-btn" style="display:none;"> Clear Filters </button>
  <h1 id="genre-title"></h1>
-  <section id="reviews" class="reviews"></section>
+ <section id="reviews" class="reviews"></section>
 </main> 
 
   <!-- Footer -->
@@ -92,6 +93,8 @@ const selectedGenres = new Set();
 
 const searchIcon = document.querySelector('.search-icon');
 const searchInput = document.querySelector('.search-input');
+
+const clearFiltersBtn = document.getElementById("clear-filters");
 
 function getAllGenres() {
    const genres = new Set();
@@ -172,7 +175,7 @@ function renderReviewsByTag(tag) {
 
  renderGenres();
     
-genreList.addEventListener("click", e => {
+ genreList.addEventListener("click", e => {
   if (!e.target.classList.contains("genre-tag")) return;
 
   const tag = e.target.dataset.tag;
@@ -186,8 +189,26 @@ genreList.addEventListener("click", e => {
     e.target.classList.add("active");
   }
 
+  clearFiltersBtn.style.display =
+    selectedGenres.size > 0 ? "inline-block" : "none";
+
   renderReviewsBySelectedGenres();
-});  
+});
+
+clearFiltersBtn.addEventListener("click", () => {
+  selectedGenres.clear();
+
+  // Remove active state from all tags
+  document.querySelectorAll(".genre-tag.active").forEach(tag => {
+    tag.classList.remove("active");
+  });
+
+  clearFiltersBtn.style.display = "none";
+  genreTitle.textContent = "All Reviews";
+
+  reviewsSection.innerHTML = "";
+  myReviews.forEach(renderReviewCard);
+});    
 
 function renderReviewsBySelectedGenres() {
   reviewsSection.innerHTML = "";
@@ -215,6 +236,7 @@ function renderReviewsBySelectedGenres() {
 </script>
 </body>
 </html>
+
 
 
 
